@@ -1,0 +1,7 @@
+INSTALL := $(shell which install || type -p install)
+UNZIP := $(shell which unzip || type -p unzip) -q
+
+APPLY_PATCHES = support/scripts/apply-patches.sh $(if $(QUIET),-s)
+
+include package/pkg-download.mk
+include package/pkg-generic.mk
