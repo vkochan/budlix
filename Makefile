@@ -108,7 +108,7 @@ MAKEOVERRIDES :=
 
 # Include some helper macros and variables
 include support/misc/utils.mk
-include package/pkg-utils.mk
+include packages/pkg-utils.mk
 
 # bash prints the name of the directory on 'cd <dir>' if CDPATH is
 # set, so unset it here to not cause problems. Notice that the export
@@ -126,8 +126,8 @@ PACKAGES :=
 
 all: world
 
-include package/Makefile.in
-include $(sort $(wildcard package/*/*.mk))
+include packages/Makefile.in
+include $(sort $(wildcard packages/*/*.mk))
 
 .PHONY:
 world: $(PACKAGES)
