@@ -132,6 +132,26 @@ include $(sort $(wildcard packages/all/*/*.mk))
 .PHONY:
 world: $(PACKAGES)
 
+.PHONY: target-finalize
+target-finalize: $(PACKAGES) $(TARGET_DIR)
+	@$(call MESSAGE,"Finalizing target directory")
+	$(call per-package-rsync,$(sort $(PACKAGES)),target,$(TARGET_DIR))
+	$(foreach hook,$(TARGET_FINALIZE_HOOKS),$($(hook))$(sep))
+
+
+	$(if $(TARGET_DIR_FILES_LISTS), \
+		cat $(TARGET_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list.txt
+	$(if $(HOST_DIR_FILES_LISTS), \
+		cat $(HOST_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list-host.txt
+	$(if $(STAGING_DIR_FILES_LISTS), \
+		cat $(STAGING_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list-staging.txt
+
+	touch $(TARGET_DIR)/usr
+
+.PHONY: target-enter
+target-enter:
+	PATH=$(TARGET_DIR)/bin:$(TARGET_DIR)/sbin:$(TARGET_DIR)/usr/bin:$(TARGET_DIR)/usr/sbin:$$PATH sh
+
 .PHONY: show-packages
 show-packages:
 	@echo $(sort $(PACKAGES))
