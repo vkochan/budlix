@@ -127,7 +127,7 @@ PACKAGES :=
 all: world
 
 include packages/Makefile.in
-include $(sort $(wildcard packages/*/*.mk))
+include $(sort $(wildcard packages/all/*/*.mk))
 
 .PHONY:
 world: $(PACKAGES)
