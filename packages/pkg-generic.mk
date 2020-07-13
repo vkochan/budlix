@@ -200,6 +200,7 @@ $(BUILD_DIR)/%/.stamp_patched:
 
 # Configure
 $(BUILD_DIR)/%/.stamp_configured:
+	@mkdir -p $(STAGING_DIR)
 	@$(call step_start,configure)
 	@$(call MESSAGE,"Configuring")
 	$(call prepare-per-package-directory,$($(PKG)_FINAL_DEPENDENCIES))

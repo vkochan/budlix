@@ -90,6 +90,7 @@ $(if $(BASE_DIR),, $(error output directory "$(O)" does not exist))
 PER_PACKAGE_DIR := $(BASE_DIR)/per-package
 export BUILD_DIR := $(BASE_DIR)/build
 BASE_INSTALL_DIR := $(BASE_DIR)/install
+STAGING_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_NAME)/staging
 INSTALL_DIR = $(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_NAME)/install,$(BASE_INSTALL_DIR))
 
 ZCAT = gzip -d -c

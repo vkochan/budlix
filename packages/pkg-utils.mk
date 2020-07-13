@@ -56,7 +56,7 @@ define per-package-rsync
 		$(3)$(sep))
 endef
 
-# prepares the per-package INSTALL_DIR of the current
+# prepares the per-package STAGING_DIR of the current
 # package, by rsync the install directories of the
 # dependencies of this package. The list of dependencies is passed as
 # argument, so that this function can be used to prepare with
@@ -64,5 +64,5 @@ endef
 #
 # $1: space-separated list of packages to rsync from
 define prepare-per-package-directory
-	$(call per-package-rsync,$(1),install,$(INSTALL_DIR))
+	$(call per-package-rsync,$(1),install,$(STAGING_DIR))
 endef

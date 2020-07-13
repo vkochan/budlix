@@ -7,3 +7,11 @@ APPLY_PATCHES = support/scripts/apply-patches.sh $(if $(QUIET),-s)
 include packages/pkg-download.mk
 include packages/pkg-generic.mk
 include packages/pkg-autotools.mk
+
+BUILD_LDFLAGS = -L$(STAGING_DIR)
+BUILD_CFLAGS = -I$(STAGING_DIR)
+
+BUILD_OPTS = \
+	LDFLAGS="$(BUILD_LDFLAGS)" \
+	CFLAGS="$(BUILD_CFLAGS)" \
+	STAGING_DIR="$(STAGING_DIR)"

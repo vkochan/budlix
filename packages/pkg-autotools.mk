@@ -127,7 +127,7 @@ ifndef $(2)_CONFIGURE_CMDS
 # Configure package for target
 define $(2)_CONFIGURE_CMDS
 	(cd $$($$(PKG)_SRCDIR) && rm -rf config.cache && \
-	$$(TARGET_CONFIGURE_OPTS) \
+	$$(BUILD_OPTS) \
 	$$(TARGET_CONFIGURE_ARGS) \
 	$$($$(PKG)_CONF_ENV) \
 	CONFIG_SITE=/dev/null \
