@@ -1,7 +1,9 @@
 INSTALL := $(shell which install || type -p install)
 UNZIP := $(shell which unzip || type -p unzip) -q
+MAKE1 := $(MAKE) -j1
 
 APPLY_PATCHES = support/scripts/apply-patches.sh $(if $(QUIET),-s)
 
 include packages/pkg-download.mk
 include packages/pkg-generic.mk
+include packages/pkg-autotools.mk

@@ -340,6 +340,9 @@ ifndef $(2)_STRIP_COMPONENTS
  endif
 endif
 
+$(2)_SRCDIR		       = $$($(2)_DIR)/$$($(2)_SUBDIR)
+$(2)_BUILDDIR		       ?= $$($(2)_SRCDIR)
+
 ifneq ($$($(2)_OVERRIDE_SRCDIR),)
 $(2)_VERSION = custom
 endif
