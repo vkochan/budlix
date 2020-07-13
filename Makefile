@@ -126,6 +126,7 @@ PACKAGES :=
 
 all: world
 
+include mirrors.mk
 include packages/Makefile.in
 include $(sort $(wildcard packages/all/*/*.mk))
 
