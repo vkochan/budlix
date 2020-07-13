@@ -89,8 +89,8 @@ $(if $(BASE_DIR),, $(error output directory "$(O)" does not exist))
 
 PER_PACKAGE_DIR := $(BASE_DIR)/per-package
 export BUILD_DIR := $(BASE_DIR)/build
-BASE_TARGET_DIR := $(BASE_DIR)/target
-TARGET_DIR = $(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_NAME)/target,$(BASE_TARGET_DIR))
+BASE_INSTALL_DIR := $(BASE_DIR)/install
+INSTALL_DIR = $(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_NAME)/install,$(BASE_INSTALL_DIR))
 
 ZCAT = gzip -d -c
 BZCAT = bzcat
@@ -124,34 +124,31 @@ PACKAGES :=
 #
 ################################################################################
 
-all: world
+all:
 
 include mirrors.mk
 include packages/Makefile.in
 include $(sort $(wildcard packages/all/*/*.mk))
 
-.PHONY:
-world: $(PACKAGES)
-
-.PHONY: target-finalize
-target-finalize: $(PACKAGES) $(TARGET_DIR)
+.PHONY: install
+install: $(PACKAGES) $(INSTALL_DIR)
 	@$(call MESSAGE,"Finalizing target directory")
-	$(call per-package-rsync,$(sort $(PACKAGES)),target,$(TARGET_DIR))
+	$(call per-package-rsync,$(sort $(PACKAGES)),install,$(INSTALL_DIR))
 	$(foreach hook,$(TARGET_FINALIZE_HOOKS),$($(hook))$(sep))
 
 
-	$(if $(TARGET_DIR_FILES_LISTS), \
-		cat $(TARGET_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list.txt
+	$(if $(INSTALL_DIR_FILES_LISTS), \
+		cat $(INSTALL_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list.txt
 	$(if $(HOST_DIR_FILES_LISTS), \
 		cat $(HOST_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list-host.txt
 	$(if $(STAGING_DIR_FILES_LISTS), \
 		cat $(STAGING_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list-staging.txt
 
-	touch $(TARGET_DIR)/usr
+	touch $(INSTALL_DIR)/usr
 
 .PHONY: target-enter
 target-enter:
-	PATH=$(TARGET_DIR)/bin:$(TARGET_DIR)/sbin:$(TARGET_DIR)/usr/bin:$(TARGET_DIR)/usr/sbin:$$PATH sh
+	PATH=$(INSTALL_DIR)/bin:$(INSTALL_DIR)/sbin:$(INSTALL_DIR)/usr/bin:$(INSTALL_DIR)/usr/sbin:$$PATH sh
 
 .PHONY: show-packages
 show-packages:
@@ -174,7 +171,7 @@ printvars:
 # ' Syntax colouring...
 
 .PHONY: prepare
-prepare: $(BUILD_DIR) $(BASE_TARGET_DIR) $(PER_PACKAGE_DIR)
+prepare: $(BUILD_DIR) $(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR)
 
-$(BUILD_DIR) $(BASE_TARGET_DIR) $(PER_PACKAGE_DIR):
+$(BUILD_DIR) $(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR):
 	@mkdir -p $@

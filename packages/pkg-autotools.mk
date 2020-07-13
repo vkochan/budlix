@@ -115,7 +115,7 @@ $(2)_CONF_ENV			?=
 $(2)_CONF_OPTS			?=
 $(2)_MAKE_ENV			?=
 $(2)_MAKE_OPTS			?=
-$(2)_INSTALL_TARGET_OPTS		?= DESTDIR=$$(TARGET_DIR) install
+$(2)_INSTALL_TARGET_OPTS		?= DESTDIR=$$(INSTALL_DIR) install
 
 #
 # Configure step. Only define it if not already defined by the package

@@ -84,10 +84,10 @@ endef
 
 define step_pkg_size
 	$(if $(filter start-install-target,$(1)-$(2)),\
-		$(call step_pkg_size_before,$(3),$(TARGET_DIR)))
+		$(call step_pkg_size_before,$(3),$(INSTALL_DIR)))
 
 	$(if $(filter end-install-target,$(1)-$(2)),\
-		$(call step_pkg_size_after,$(3),$(TARGET_DIR)))
+		$(call step_pkg_size_after,$(3),$(INSTALL_DIR)))
 endef
 GLOBAL_INSTRUMENTATION_HOOKS += step_pkg_size
 
@@ -100,7 +100,7 @@ endef
 
 define step_check_build_dir
 	$(if $(filter install-target,$(2)),\
-		$(if $(filter end,$(1)),$(call step_check_build_dir_one,$(3),$(TARGET_DIR)/$(O))))
+		$(if $(filter end,$(1)),$(call step_check_build_dir_one,$(3),$(INSTALL_DIR)/$(O))))
 endef
 GLOBAL_INSTRUMENTATION_HOOKS += step_check_build_dir
 
@@ -219,11 +219,11 @@ $(BUILD_DIR)/%/.stamp_built::
 	@$(call step_end,build)
 	$(Q)touch $@
 
-# Install to target dir
-$(BUILD_DIR)/%/.stamp_target_installed:
-	@mkdir -p $(TARGET_DIR)
+# Install to install dir
+$(BUILD_DIR)/%/.stamp_installed:
+	@mkdir -p $(INSTALL_DIR)
 	@$(call step_start,install-target)
-	@$(call MESSAGE,"Installing to target")
+	@$(call MESSAGE,"Installing")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_TARGET_HOOKS),$(call $(hook))$(sep))
 	+$($(PKG)_INSTALL_TARGET_CMDS)
 	$(if $(SYSTEM_INIT_SYSTEMD),\
@@ -235,7 +235,7 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 			$($(PKG)_INSTALL_INIT_SYSV)))
 	$(foreach hook,$($(PKG)_POST_INSTALL_TARGET_HOOKS),$(call $(hook))$(sep))
 	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
-		$(RM) -f $(addprefix $(TARGET_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
+		$(RM) -f $(addprefix $(INSTALL_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
 	fi
 	@$(call step_end,install-target)
 	$(Q)touch $@
@@ -272,7 +272,7 @@ $(BUILD_DIR)/%/.stamp_dircleaned:
 #   the expected value. This mechanism is for example used for the TARGET_PATCH
 #   rule.
 # - All other variables should be referenced with a double dollar sign:
-#   $$(TARGET_DIR), $$($(2)_VERSION), etc. Also all make functions should be
+#   $$(INSTALL_DIR), $$($(2)_VERSION), etc. Also all make functions should be
 #   referenced with a double dollar sign: $$(subst), $$(call), $$(filter-out),
 #   etc. This rule ensures that these variables and functions are only expanded
 #   during the $(eval) step, and not earlier. Otherwise, unintuitive and
@@ -473,7 +473,7 @@ $(2)_FINAL_RECURSIVE_RDEPENDENCIES = $$(sort \
 	$$($(2)_FINAL_RECURSIVE_RDEPENDENCIES__X))
 
 # define sub-target stamps
-$(2)_TARGET_INSTALL_TARGET =	$$($(2)_DIR)/.stamp_target_installed
+$(2)_TARGET_INSTALL_TARGET =	$$($(2)_DIR)/.stamp_installed
 $(2)_TARGET_BUILD =		$$($(2)_DIR)/.stamp_built
 $(2)_TARGET_CONFIGURE =		$$($(2)_DIR)/.stamp_configured
 $(2)_TARGET_RSYNC =		$$($(2)_DIR)/.stamp_rsynced
