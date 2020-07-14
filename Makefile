@@ -27,6 +27,8 @@ SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	 else if [ -x /bin/bash ]; then echo /bin/bash; \
 	 else echo sh; fi; fi)
 
+SED = sed -i
+
 # Set O variable if not already done on the command line;
 # or avoid confusing packages that can use the O=<dir> syntax for out-of-tree
 # build by preventing it from being forwarded to sub-make calls.
@@ -61,8 +63,6 @@ $(error The build directory can not contain a '@')
 endif
 
 CANONICAL_CURDIR = $(realpath $(CURDIR))
-
-REQ_UMASK = 0022
 
 # Make sure O= is passed (with its absolute canonical path) everywhere the
 # toplevel makefile is called back.

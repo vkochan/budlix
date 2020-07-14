@@ -246,6 +246,14 @@ $(BUILD_DIR)/%/.stamp_dircleaned:
 	$(if $(BR2_PER_PACKAGE_DIRECTORIES),rm -Rf $(PER_PACKAGE_DIR)/$(NAME))
 	rm -Rf $(@D)
 
+define virt-provides-single
+ifneq ($$(call qstrip,$$(BR2_PACKAGE_PROVIDES_$(2))),$(3))
+$$(error Configuration error: both "$(3)" and $$($(2)_PROVIDES)\
+are selected as providers for virtual package "$(1)". Only one provider can\
+be selected at a time. Please fix your configuration)
+endif
+endef
+
 ################################################################################
 # inner-generic-package -- generates the make targets needed to build a
 # generic package
@@ -441,6 +449,12 @@ endif
 $(2)_REDISTRIBUTE		?= YES
 
 $(2)_REDIST_SOURCES_DIR = $$(REDIST_SOURCES_DIR_$$(call UPPERCASE,$(4)))/$$($(2)_BASENAME_RAW)
+
+$(2)_ADD_LIBC_DEPENDENCY	?= YES
+
+ifeq ($$($(2)_ADD_LIBC_DEPENDENCY),YES)
+$(2)_DEPENDENCIES += musl
+endif
 
 # Eliminate duplicates in dependencies
 $(2)_FINAL_DEPENDENCIES = $$(sort $$($(2)_DEPENDENCIES))
