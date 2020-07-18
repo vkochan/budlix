@@ -127,9 +127,13 @@ PACKAGES :=
 
 all:
 
+-include $(BASE_DIR)/.config
 include mirrors.mk
 include packages/Makefile.in
 include $(sort $(wildcard packages/all/*/*.mk))
+
+$(BASE_DIR)/.config:
+	@touch $@
 
 .PHONY: install
 install: $(PACKAGES) $(INSTALL_DIR)

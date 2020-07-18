@@ -243,7 +243,7 @@ $(BUILD_DIR)/%/.stamp_installed:
 
 # Remove package sources
 $(BUILD_DIR)/%/.stamp_dircleaned:
-	$(if $(BR2_PER_PACKAGE_DIRECTORIES),rm -Rf $(PER_PACKAGE_DIR)/$(NAME))
+	rm -Rf $(PER_PACKAGE_DIR)/$(NAME)
 	rm -Rf $(@D)
 
 define virt-provides-single
@@ -522,6 +522,23 @@ $(2)_POST_BUILD_HOOKS           ?=
 $(2)_PRE_INSTALL_HOOKS          ?=
 $(2)_POST_INSTALL_HOOKS         ?=
 
+$(1)-enable: $$(BASE_DIR)/.config
+	@if ! grep -q 'CONFIG_PKG_$(2)=y' $$(BASE_DIR)/.config; then \
+	    echo 'CONFIG_PKG_$(2)=y' >> $$(BASE_DIR)/.config; \
+	fi
+	@for p in $$(call UPPERCASE,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES)); do \
+	    echo "CONFIG_PKG_$$$$p=y" >> $$(BASE_DIR)/.config; \
+	done
+
+.PHONY: $(1)-disable
+$(1)-disable: $$(BASE_DIR)/.config $(1)-dirclean
+	@$$(SED) $$(BASE_DIR)/.config -e '/^CONFIG_PKG_$(2).*/d'
+
+$(1)-disable-depends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES),$$(p)-disable)
+$(1)-disable-rdepends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE_RDEPENDENCIES),$$(p)-disable)
+
+ifeq ($$(CONFIG_PKG_$(2)),y)
+
 # human-friendly targets and target sequencing
 $(1):			$(1)-install
 $(1)-install:		$(1)-install-target
@@ -752,9 +769,9 @@ endif
 $$(eval $$(foreach p,$$($(2)_FINAL_ALL_DEPENDENCIES),\
 	$$(call UPPERCASE,$$(p))_RDEPENDENCIES += $(1)$$(sep)))
 
-PACKAGES += $(1)
-
 TARGET_FINALIZE_HOOKS += $$($(2)_TARGET_FINALIZE_HOOKS)
+
+PACKAGES += $(1)
 
 ifeq ($$($(2)_SITE_METHOD),svn)
 DL_TOOLS_DEPENDENCIES += svn
@@ -807,6 +824,7 @@ ifeq ($$(patsubst %/,ERROR,$$($(2)_SITE)),ERROR)
 $$(error $(2)_SITE ($$($(2)_SITE)) cannot have a trailing slash)
 endif
 
+endif
 endef # inner-generic-package
 
 ################################################################################
