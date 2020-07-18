@@ -452,8 +452,10 @@ $(2)_REDIST_SOURCES_DIR = $$(REDIST_SOURCES_DIR_$$(call UPPERCASE,$(4)))/$$($(2)
 
 $(2)_ADD_LIBC_DEPENDENCY	?= YES
 
+ifeq ($$(CONFIG_PKG_MUSL),y)
 ifeq ($$($(2)_ADD_LIBC_DEPENDENCY),YES)
 $(2)_DEPENDENCIES += musl
+endif
 endif
 
 # Eliminate duplicates in dependencies
