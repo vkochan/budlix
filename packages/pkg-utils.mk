@@ -51,9 +51,9 @@ extractor-system-dependency = $(if $(EXTRACTOR_PKG_DEPENDENCY$(suffix $(1))),,\
 define per-package-rsync
 	mkdir -p $(3)
 	$(foreach pkg,$(1),\
-		rsync -a --link-dest=$(PER_PACKAGE_DIR)/$(pkg)/$(2)/ \
-		$(PER_PACKAGE_DIR)/$(pkg)/$(2)/ \
-		$(3)$(sep))
+		support/scripts/links.sh -i \
+		-s $(PER_PACKAGE_DIR)/$(pkg)/$(2)/ \
+		-d $(3)$(sep))
 endef
 
 # prepares the per-package STAGING_DIR of the current
