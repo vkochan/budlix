@@ -125,7 +125,7 @@ PACKAGES :=
 #
 ################################################################################
 
-all:
+all: install
 
 -include $(BASE_DIR)/.config
 include mirrors.mk
@@ -151,8 +151,8 @@ install: $(PACKAGES) $(INSTALL_DIR)
 
 	touch $(INSTALL_DIR)/usr
 
-.PHONY: target-enter
-target-enter:
+.PHONY: sysroot-enter
+sysroot-enter:
 	PATH=$(INSTALL_DIR)/bin:$(INSTALL_DIR)/sbin:$(INSTALL_DIR)/usr/bin:$(INSTALL_DIR)/usr/sbin:$$PATH sh
 
 .PHONY: show-packages
