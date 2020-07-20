@@ -52,8 +52,8 @@ define per-package-rsync
 	mkdir -p $(3)
 	$(foreach pkg,$(1),\
 		support/scripts/links.sh -i \
-		-s $(PER_PACKAGE_DIR)/$(pkg)/$(2)/ \
-		-d $(3)$(sep))
+		-d $(PER_PACKAGE_DIR)/$(pkg)/$(2)/ \
+		-s $(3)$(sep))
 endef
 
 # prepares the per-package STAGING_DIR of the current

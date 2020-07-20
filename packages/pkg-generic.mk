@@ -548,6 +548,16 @@ $(1)-install:		$(1)-install-target
 $(1)-install-target:		$$($(2)_TARGET_INSTALL_TARGET)
 $$($(2)_TARGET_INSTALL_TARGET):	$$($(2)_TARGET_BUILD)
 
+$(1)-uninstall:	PKG = $(2)
+$(1)-uninstall:
+	@support/scripts/links.sh -u -s $(BASE_DIR)/install -d $$(INSTALL_DIR)
+	@for p in $$($$(PKG)_RDEPENDENCIES); \
+	do \
+	    support/scripts/links.sh -u \
+	    -s $$(PER_PACKAGE_DIR)/$$$$p/staging \
+	    -d $$(INSTALL_DIR); \
+	done;
+
 $(1)-build:		$$($(2)_TARGET_BUILD)
 $$($(2)_TARGET_BUILD):	$$($(2)_TARGET_CONFIGURE)
 

@@ -2,20 +2,30 @@
 
 set -e
 
-# $1 - source dir
-# $2 - dest dir
+# $1 - dest dir
+# $2 - source dir
 do_install() {
-    local src=$1
-    local dst=$2
+    local dst=$1
+    local src=$2
 
-    for o in $(ls -1 $src); do
-        if [ -d "$src/$o" ]; then
-            mkdir -pv $dst/$o
-	    do_install $src/$o $dst/$o
-	elif [ -f "$src/$o" ]; then
-	    ln -sfv $src/$o $dst/$o
+    for o in $(ls -1 $dst); do
+        if [ -d "$dst/$o" ]; then
+            mkdir -pv $src/$o
+	    do_install  $dst/$o $src/$o
+	elif [ -f "$dst/$o" ]; then
+	    ln -sfv $dst/$o $src/$o
 	fi
     done
+}
+
+# $1 - dest dir
+# $2 - source dir
+do_uninstall() {
+	local dst=$1
+	local src=$2
+
+	find $src -lname $dst'*' -delete
+	find $src -mindepth 1 -type d -empty -delete
 }
 
 main() {
@@ -36,9 +46,7 @@ main() {
 
     if [ -z "${install}" ]; then
         error "please specify -i or -u option\n"
-    fi
-
-    if [ "${install}" == "y" ]; then
+    else
         if [ -z "${src}" ]; then
             error "please specify source path (-s)\n"
 	else
@@ -49,8 +57,12 @@ main() {
 	else
             [ -e ${dst} ] || error "$src does not exist\n"
         fi
+    fi
 
-        do_install $src $dst
+    if [ "${install}" == "y" ]; then
+        do_install $dst $src
+    elif [ "${install}" == "n" ]; then
+        do_uninstall $dst $src
     fi
 }
 
