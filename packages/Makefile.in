@@ -8,13 +8,12 @@ include packages/pkg-download.mk
 include packages/pkg-generic.mk
 include packages/pkg-autotools.mk
 
-BUILD_CC = $(CC) --sysroot $(STAGING_DIR)
+BUILD_CC = $(CC)
 
 ifeq ($(CONFIG_PKG_MUSL),y)
-BUILD_CC += $(CC) -specs $(STAGING_DIR)/lib/musl-gcc.specs
+BUILD_CC += -specs $(STAGING_DIR)/lib/musl-gcc.specs
 endif
 
-BUILD_CC = $(CC)
 BUILD_LDFLAGS = -L$(STAGING_DIR)
 BUILD_CFLAGS = -I$(STAGING_DIR)
 BUILD_CPPFLAGS = -I$(STAGING_DIR)
