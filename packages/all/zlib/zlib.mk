@@ -23,7 +23,7 @@ define ZLIB_BUILD_CMDS
 	$(BUILD_OPTS) $(MAKE1) -C $(@D)
 endef
 
-define ZLIB_INSTALL_TARGET_CMDS
+define ZLIB_INSTALL_CMDS
 	$(MAKE1) -C $(@D) DESTDIR=$(INSTALL_DIR) LDCONFIG=true install
 endef
 

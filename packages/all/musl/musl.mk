@@ -40,7 +40,7 @@ define MUSL_BUILD_CMDS
 	$(MUSL_BUILD_OPTS) $(MAKE) -C $(@D)
 endef
 
-define MUSL_INSTALL_TARGET_CMDS
+define MUSL_INSTALL_CMDS
 	$(MAKE) -C $(@D) DESTDIR=$(INSTALL_DIR) install
 
 	$(SED) -e 's|/usr/include|$(INSTALL_DIR)/usr/include|g' -e 's|/lib|$(INSTALL_DIR)/lib|g' \

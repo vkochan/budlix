@@ -115,7 +115,7 @@ $(2)_CONF_ENV			?=
 $(2)_CONF_OPTS			?=
 $(2)_MAKE_ENV			?=
 $(2)_MAKE_OPTS			?=
-$(2)_INSTALL_TARGET_OPTS		?= DESTDIR=$$(INSTALL_DIR) install
+$(2)_INSTALL_OPTS		?= DESTDIR=$$(INSTALL_DIR) install
 
 #
 # Configure step. Only define it if not already defined by the package
@@ -172,9 +172,9 @@ endif
 # Target installation step. Only define it if not already defined by
 # the package .mk file.
 #
-ifndef $(2)_INSTALL_TARGET_CMDS
-define $(2)_INSTALL_TARGET_CMDS
-	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_INSTALL_TARGET_OPTS) -C $$($$(PKG)_SRCDIR)
+ifndef $(2)_INSTALL_CMDS
+define $(2)_INSTALL_CMDS
+	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_INSTALL_OPTS) -C $$($$(PKG)_SRCDIR)
 endef
 endif
 

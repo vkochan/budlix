@@ -225,8 +225,8 @@ $(BUILD_DIR)/%/.stamp_installed:
 	@mkdir -p $(INSTALL_DIR)
 	@$(call step_start,install-target)
 	@$(call MESSAGE,"Installing")
-	$(foreach hook,$($(PKG)_PRE_INSTALL_TARGET_HOOKS),$(call $(hook))$(sep))
-	+$($(PKG)_INSTALL_TARGET_CMDS)
+	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
+	+$($(PKG)_INSTALL_CMDS)
 	$(if $(SYSTEM_INIT_SYSTEMD),\
 		$($(PKG)_INSTALL_INIT_SYSTEMD))
 	$(if $(SYSTEM_INIT_SYSV)$(BR2_INIT_BUSYBOX),\
@@ -234,7 +234,7 @@ $(BUILD_DIR)/%/.stamp_installed:
 	$(if $(SYSTEM_INIT_OPENRC), \
 		$(or $($(PKG)_INSTALL_INIT_OPENRC), \
 			$($(PKG)_INSTALL_INIT_SYSV)))
-	$(foreach hook,$($(PKG)_POST_INSTALL_TARGET_HOOKS),$(call $(hook))$(sep))
+	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
 		$(RM) -f $(addprefix $(INSTALL_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
 	fi

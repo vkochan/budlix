@@ -12,7 +12,7 @@ define DVTM_BUILD_CMDS
 	$(BUILD_OPTS) $(MAKE) -C $(@D)
 endef
 
-define DVTM_INSTALL_TARGET_CMDS
+define DVTM_INSTALL_CMDS
 	$(MAKE) -C $(@D) PREFIX=/usr DESTDIR=$(INSTALL_DIR) install
 endef
 

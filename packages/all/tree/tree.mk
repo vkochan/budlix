@@ -14,7 +14,7 @@ define TREE_BUILD_CMDS
 	$(MAKE) $(BUILD_OPTS) -C $(@D)
 endef
 
-define TREE_INSTALL_TARGET_CMDS
+define TREE_INSTALL_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/tree $(INSTALL_DIR)/usr/bin/tree
 endef
 

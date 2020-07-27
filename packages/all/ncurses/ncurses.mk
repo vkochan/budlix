@@ -47,7 +47,7 @@ define NCURSES_LINK_INSTALLED_LIBS
 	)
 endef
 
-NCURSES_POST_INSTALL_TARGET_HOOKS += NCURSES_LINK_INSTALLED_LIBS
+NCURSES_POST_INSTALL_HOOKS += NCURSES_LINK_INSTALLED_LIBS
 
 # ncurses breaks with parallel build, but takes quite a while to
 # build single threaded. Work around it similar to how Gentoo does
