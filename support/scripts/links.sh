@@ -50,12 +50,12 @@ main() {
         if [ -z "${src}" ]; then
             error "please specify source path (-s)\n"
 	else
-            [ -e ${src} ] || error "$src does not exist\n"
+	    [ -e ${src} ] || (warn "$src does not exist\n"; exit 0)
         fi
         if [ -z "${dst}" ]; then
             error "please specify dest path (-d)\n"
 	else
-            [ -e ${dst} ] || error "$src does not exist\n"
+            [ -e ${dst} ] || (warn "$src does not exist\n"; exit 0)
         fi
     fi
 

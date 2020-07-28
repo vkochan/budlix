@@ -533,7 +533,7 @@ $(1)-enable: $$(BASE_DIR)/.config
 	done
 
 .PHONY: $(1)-disable
-$(1)-disable: $$(BASE_DIR)/.config $(1)-dirclean
+$(1)-disable: $$(BASE_DIR)/.config $(1)-dirclean $(1)-uninstall
 	@$$(SED) $$(BASE_DIR)/.config -e '/^CONFIG_PKG_$(2).*/d'
 
 $(1)-disable-depends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES),$$(p)-disable)
