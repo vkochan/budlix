@@ -23,6 +23,8 @@ NCURSES_CONF_OPTS = \
 	--enable-pc-files \
 	--enable-widec \
 	--disable-stripping \
+	--with-shared \
+	--with-normal \
 	--with-pkg-config-libdir="/usr/lib/pkgconfig"
 
 NCURSES_LIB_SUFFIX = w
