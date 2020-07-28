@@ -222,7 +222,7 @@ $(BUILD_DIR)/%/.stamp_built::
 
 # Install to install dir
 $(BUILD_DIR)/%/.stamp_installed:
-	@mkdir -p $(INSTALL_DIR)
+	@mkdir -p $(INSTALL_DIR)/usr/lib
 	@$(call step_start,install-target)
 	@$(call MESSAGE,"Installing")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))

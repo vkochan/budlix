@@ -14,7 +14,7 @@ ifeq ($(CONFIG_PKG_MUSL),y)
 BUILD_CC += -specs $(STAGING_DIR)/lib/musl-gcc.specs
 endif
 
-BUILD_LDFLAGS = -L$(STAGING_DIR)
+BUILD_LDFLAGS = -Wl,-rpath,$(STAGING_DIR)/usr/lib/ -L$(STAGING_DIR)
 BUILD_CFLAGS = -I$(STAGING_DIR)
 BUILD_CPPFLAGS = -I$(STAGING_DIR)
 
