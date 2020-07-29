@@ -203,7 +203,7 @@ $(BUILD_DIR)/%/.stamp_configured:
 	@mkdir -p $(STAGING_DIR)
 	@$(call step_start,configure)
 	@$(call MESSAGE,"Configuring")
-	$(call prepare-per-package-directory,$($(PKG)_FINAL_DEPENDENCIES))
+	$(call prepare-per-package-directory,$($(PKG)_FINAL_RECURSIVE_DEPENDENCIES))
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$($(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -466,25 +466,21 @@ $(2)_FINAL_ALL_DEPENDENCIES = \
 		$$($(2)_FINAL_DEPENDENCIES) \
 		$$($(2)_FINAL_PATCH_DEPENDENCIES))
 $(2)_FINAL_RECURSIVE_DEPENDENCIES = $$(sort \
-	$$(if $$(filter undefined,$$(origin $(2)_FINAL_RECURSIVE_DEPENDENCIES__X)), \
-		$$(eval $(2)_FINAL_RECURSIVE_DEPENDENCIES__X := \
-			$$(foreach p, \
-				$$($(2)_FINAL_ALL_DEPENDENCIES), \
-				$$(p) \
-				$$($$(call UPPERCASE,$$(p))_FINAL_RECURSIVE_DEPENDENCIES) \
-			) \
+	$$(eval $(2)_FINAL_RECURSIVE_DEPENDENCIES__X := \
+		$$(foreach p, \
+			$$($(2)_FINAL_ALL_DEPENDENCIES), \
+			$$(p) \
+			$$($$(call UPPERCASE,$$(p))_FINAL_RECURSIVE_DEPENDENCIES) \
 		) \
 	) \
 	$$($(2)_FINAL_RECURSIVE_DEPENDENCIES__X))
 
 $(2)_FINAL_RECURSIVE_RDEPENDENCIES = $$(sort \
-	$$(if $$(filter undefined,$$(origin $(2)_FINAL_RECURSIVE_RDEPENDENCIES__X)), \
-		$$(eval $(2)_FINAL_RECURSIVE_RDEPENDENCIES__X := \
-			$$(foreach p, \
-				$$($(2)_RDEPENDENCIES), \
-				$$(p) \
-				$$($$(call UPPERCASE,$$(p))_FINAL_RECURSIVE_RDEPENDENCIES) \
-			) \
+	$$(eval $(2)_FINAL_RECURSIVE_RDEPENDENCIES__X := \
+		$$(foreach p, \
+			$$($(2)_RDEPENDENCIES), \
+			$$(p) \
+			$$($$(call UPPERCASE,$$(p))_FINAL_RECURSIVE_RDEPENDENCIES) \
 		) \
 	) \
 	$$($(2)_FINAL_RECURSIVE_RDEPENDENCIES__X))
