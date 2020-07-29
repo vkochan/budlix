@@ -55,7 +55,7 @@ PYTHON_CONF_OPTS += \
 	--disable-test-modules
 
 # Always install the python-config symlink in the staging tree
-define PYTHON_INSTALL_PYTHON_CONFIG_SYMLINK
+define PYTHON_INSTALL_PYTHON_SYMLINK
 	ln -sf python2-config $(INSTALL_DIR)/usr/bin/python-config
 	ln -sf python2 $(INSTALL_DIR)/usr/bin/python
 endef
