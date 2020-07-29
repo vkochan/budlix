@@ -115,7 +115,7 @@ $(2)_CONF_ENV			?=
 $(2)_CONF_OPTS			?=
 $(2)_MAKE_ENV			?=
 $(2)_MAKE_OPTS			?=
-$(2)_INSTALL_OPTS		?= DESTDIR=$$(INSTALL_DIR) install
+$(2)_INSTALL_OPTS		?= install
 
 #
 # Configure step. Only define it if not already defined by the package
@@ -132,10 +132,10 @@ define $(2)_CONFIGURE_CMDS
 	$$($$(PKG)_CONF_ENV) \
 	CONFIG_SITE=/dev/null \
 	./configure \
-		--prefix=/usr \
-		--exec-prefix=/usr \
-		--sysconfdir=/etc \
-		--localstatedir=/var \
+		--prefix="$$(INSTALL_DIR)/usr" \
+		--exec-prefix="$$(INSTALL_DIR)/usr" \
+		--sysconfdir="$$(INSTALL_DIR)/etc" \
+		--localstatedir="$$(INSTALL_DIR)/var" \
 		--program-prefix="" \
 		$$(if $$($$(PKG)_OVERRIDE_SRCDIR),,--disable-dependency-tracking) \
 		--enable-ipv6 \
@@ -156,6 +156,8 @@ $(2)_PRE_CONFIGURE_HOOKS += GETTEXTIZE_HOOK
 endif
 $(2)_PRE_CONFIGURE_HOOKS += AUTORECONF_HOOK
 
+$(2)_DEPENDENCIES += automake
+
 endif
 
 #
@@ -164,7 +166,7 @@ endif
 #
 ifndef $(2)_BUILD_CMDS
 define $(2)_BUILD_CMDS
-	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_MAKE_OPTS) -C $$($$(PKG)_SRCDIR)
+	$$(BUILD_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_MAKE_OPTS) -C $$($$(PKG)_SRCDIR)
 endef
 endif
 
@@ -174,7 +176,7 @@ endif
 #
 ifndef $(2)_INSTALL_CMDS
 define $(2)_INSTALL_CMDS
-	$$(TARGET_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_INSTALL_OPTS) -C $$($$(PKG)_SRCDIR)
+	$$(BUILD_MAKE_ENV) $$($$(PKG)_MAKE_ENV) $$($$(PKG)_MAKE) $$($$(PKG)_INSTALL_OPTS) -C $$($$(PKG)_SRCDIR)
 endef
 endif
 
