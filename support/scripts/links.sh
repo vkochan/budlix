@@ -10,10 +10,10 @@ do_install() {
 
     for o in $(ls -1 $dst); do
         if [ -d "$dst/$o" ]; then
-            mkdir -pv $src/$o
+            mkdir -p $src/$o
 	    do_install  $dst/$o $src/$o
 	elif [ -f "$dst/$o" ]; then
-	    ln -sfv $dst/$o $src/$o
+	    ln -sf $dst/$o $src/$o
 	fi
     done
 }
@@ -60,8 +60,10 @@ main() {
     fi
 
     if [ "${install}" == "y" ]; then
+        echo "Linking $dst -> $src ..."
         do_install $dst $src
     elif [ "${install}" == "n" ]; then
+        echo "Un-linking $dst -> $src ..."
         do_uninstall $dst $src
     fi
 }
