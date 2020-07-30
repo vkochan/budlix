@@ -25,7 +25,7 @@ NCURSES_CONF_OPTS = \
 	--disable-stripping \
 	--with-shared \
 	--with-normal \
-	--with-pkg-config-libdir="/usr/lib/pkgconfig"
+	--with-pkg-config-libdir="$(INSTALL_DIR)/usr/lib/pkgconfig"
 
 NCURSES_LIB_SUFFIX = w
 NCURSES_LIBS = ncurses menu panel form
