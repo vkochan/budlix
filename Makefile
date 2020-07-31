@@ -88,11 +88,13 @@ BASE_DIR := $(CANONICAL_O)
 $(if $(BASE_DIR),, $(error output directory "$(O)" does not exist))
 
 PER_PACKAGE_DIR := $(BASE_DIR)/per-package
-export TMP_DIR := $(BASE_DIR)/tmp
-BASE_INSTALL_DIR := $(BASE_DIR)/install
+
 STAGING_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/staging
-INSTALL_DIR = $(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/install,$(BASE_INSTALL_DIR))
+INSTALL_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/install
 BUILD_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/build
+SYSROOT_DIR = $(BASE_DIR)/sysroot
+
+export TMP_DIR := $(BASE_DIR)/tmp
 
 ZCAT = gzip -d -c
 BZCAT = bzcat
@@ -140,9 +142,9 @@ $(BASE_DIR)/.config:
 	@touch $@
 
 .PHONY: install
-install: $(PACKAGES) $(INSTALL_DIR)
-	@$(call MESSAGE,"Finalizing target directory")
-	$(call per-package-rsync,$(sort $(PACKAGES)),install,$(INSTALL_DIR))
+install: $(PACKAGES) $(SYSROOT_DIR)
+	@$(call MESSAGE,"Finalizing sysroot directory")
+	$(call per-package-rsync,$(sort $(PACKAGES)),install,$(SYSROOT_DIR))
 	$(foreach hook,$(TARGET_FINALIZE_HOOKS),$($(hook))$(sep))
 
 
@@ -153,11 +155,11 @@ install: $(PACKAGES) $(INSTALL_DIR)
 	$(if $(STAGING_DIR_FILES_LISTS), \
 		cat $(STAGING_DIR_FILES_LISTS)) > $(BASE_DIR)/packages-file-list-staging.txt
 
-	touch $(INSTALL_DIR)/usr
+	mkdir -p $(SYSROOT_DIR)/usr
 
 .PHONY: sysroot-enter
 sysroot-enter:
-	PATH=$(INSTALL_DIR)/bin:$(INSTALL_DIR)/sbin:$(INSTALL_DIR)/usr/bin:$(INSTALL_DIR)/usr/sbin:$$PATH sh
+	PATH=$(SYSROOT_DIR)/bin:$(SYSROOT_DIR)/sbin:$(SYSROOT_DIR)/usr/bin:$(SYSROOT_DIR)/usr/sbin:$$PATH sh
 
 .PHONY: show-packages
 show-packages:
@@ -180,7 +182,7 @@ printvars:
 # ' Syntax colouring...
 
 .PHONY: prepare
-prepare: $(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR)
+prepare: $(SYSROOT_DIR) $(PER_PACKAGE_DIR)
 
-$(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR):
+$(SYSROOT_DIR) $(PER_PACKAGE_DIR):
 	@mkdir -p $@
