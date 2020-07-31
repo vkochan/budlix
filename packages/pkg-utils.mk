@@ -52,7 +52,7 @@ define per-package-rsync
 	mkdir -p $(3)
 	$(foreach pkg,$(1),\
 		support/scripts/links.sh -i \
-		-d $(PER_PACKAGE_DIR)/$(pkg)/$(2)/ \
+		-d $(PER_PACKAGE_DIR)/$($(pkg)_BASENAME)/$(2)/ \
 		-s $(3)$(sep))
 endef
 

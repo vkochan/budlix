@@ -106,7 +106,8 @@ main() {
         # We let the backends create tmpf, so they are able to set whatever
         # permission bits they want (although we're only really interested in
         # the executable bit.)
-        tmpd="$(mktemp -d "${BUILD_DIR}/.${output##*/}.XXXXXX")"
+	mkdir -p ${TMP_DIR}
+        tmpd="$(mktemp -d "${TMP_DIR}/.${output##*/}.XXXXXX")"
         tmpf="${tmpd}/output"
 
         # Helpers expect to run in a directory that is *really* trashable, so

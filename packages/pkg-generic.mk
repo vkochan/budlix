@@ -51,7 +51,7 @@ endef
 define step_time
 	printf "%s:%-5.5s:%-20.20s: %s\n"           \
 	       "$$(date +%s.%N)" "$(1)" "$(2)" "$(3)"  \
-	       >>"$(BUILD_DIR)/build-time.log"
+	       >>"$(BASE_DIR)/build-time.log"
 endef
 GLOBAL_INSTRUMENTATION_HOOKS += step_time
 
@@ -118,7 +118,7 @@ endif
 ################################################################################
 
 # Retrieve the archive
-$(BUILD_DIR)/%/.stamp_downloaded:
+$(PER_PACKAGE_DIR)/%/build/.stamp_downloaded:
 	@$(call step_start,download)
 	$(call prepare-per-package-directory,$($(PKG)_FINAL_DOWNLOAD_DEPENDENCIES))
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
@@ -136,7 +136,7 @@ $(BUILD_DIR)/%/.stamp_downloaded:
 	$(Q)touch $@
 
 # Retrieve actual source archive, e.g. for prebuilt external toolchains
-$(BUILD_DIR)/%/.stamp_actual_downloaded:
+$(PER_PACKAGE_DIR)/%/build/.stamp_actual_downloaded:
 	@$(call step_start,actual-download)
 	$(call DOWNLOAD,$($(PKG)_ACTUAL_SOURCE_SITE)/$($(PKG)_ACTUAL_SOURCE_TARBALL),$(PKG))
 	$(Q)mkdir -p $(@D)
@@ -144,7 +144,7 @@ $(BUILD_DIR)/%/.stamp_actual_downloaded:
 	$(Q)touch $@
 
 # Unpack the archive
-$(BUILD_DIR)/%/.stamp_extracted:
+$(PER_PACKAGE_DIR)/%/build/.stamp_extracted:
 	@$(call step_start,extract)
 	@$(call MESSAGE,"Extracting")
 	$(call prepare-per-package-directory,$($(PKG)_FINAL_EXTRACT_DEPENDENCIES))
@@ -159,7 +159,7 @@ $(BUILD_DIR)/%/.stamp_extracted:
 
 # Rsync the source directory if the <pkg>_OVERRIDE_SRCDIR feature is
 # used.
-$(BUILD_DIR)/%/.stamp_rsynced:
+$(PER_PACKAGE_DIR)/%/build/.stamp_rsynced:
 	@$(call step_start,rsync)
 	@$(call MESSAGE,"Syncing from source dir $(SRCDIR)")
 	@mkdir -p $(@D)
@@ -177,8 +177,8 @@ $(BUILD_DIR)/%/.stamp_rsynced:
 # prefix of the patches
 #
 # For BR2_GLOBAL_PATCH_DIR, only generate if it is defined
-$(BUILD_DIR)/%/.stamp_patched: PATCH_BASE_DIRS =  $(PKGDIR)
-$(BUILD_DIR)/%/.stamp_patched:
+$(PER_PACKAGE_DIR)/%/build/.stamp_patched: PATCH_BASE_DIRS =  $(PKGDIR)
+$(PER_PACKAGE_DIR)/%/build/.stamp_patched:
 	@$(call step_start,patch)
 	@$(call MESSAGE,"Patching")
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
@@ -199,7 +199,7 @@ $(BUILD_DIR)/%/.stamp_patched:
 	$(Q)touch $@
 
 # Configure
-$(BUILD_DIR)/%/.stamp_configured:
+$(PER_PACKAGE_DIR)/%/build/.stamp_configured:
 	@mkdir -p $(STAGING_DIR)
 	@$(call step_start,configure)
 	@$(call MESSAGE,"Configuring")
@@ -211,7 +211,7 @@ $(BUILD_DIR)/%/.stamp_configured:
 	$(Q)touch $@
 
 # Build
-$(BUILD_DIR)/%/.stamp_built::
+$(PER_PACKAGE_DIR)/%/build/.stamp_built::
 	@$(call step_start,build)
 	@$(call MESSAGE,"Building")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
@@ -221,7 +221,7 @@ $(BUILD_DIR)/%/.stamp_built::
 	$(Q)touch $@
 
 # Install to install dir
-$(BUILD_DIR)/%/.stamp_installed:
+$(PER_PACKAGE_DIR)/%/build/.stamp_installed:
 	@mkdir -p $(INSTALL_DIR)/usr/lib
 	@$(call step_start,install-target)
 	@$(call MESSAGE,"Installing")
@@ -242,7 +242,7 @@ $(BUILD_DIR)/%/.stamp_installed:
 	$(Q)touch $@
 
 # Remove package sources
-$(BUILD_DIR)/%/.stamp_dircleaned:
+$(PER_PACKAGE_DIR)/%/build/.stamp_dircleaned:
 	rm -Rf $(PER_PACKAGE_DIR)/$(NAME)
 	rm -Rf $(@D)
 
@@ -331,7 +331,7 @@ $(2)_BASENAME	= $$(if $$($(2)_VERSION),$(1)-$$($(2)_VERSION),$(1))
 $(2)_BASENAME_RAW = $$(if $$($(2)_VERSION),$$($(2)_RAWNAME)-$$($(2)_VERSION),$$($(2)_RAWNAME))
 $(2)_DL_SUBDIR ?= $$($(2)_RAWNAME)
 $(2)_DL_DIR = $$(DL_DIR)/$$($(2)_DL_SUBDIR)
-$(2)_DIR	=  $$(BUILD_DIR)/$$($(2)_BASENAME)
+$(2)_DIR	=  $$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)/build
 
 ifndef $(2)_SUBDIR
  ifdef $(3)_SUBDIR
@@ -695,7 +695,7 @@ $$($(2)_TARGET_SOURCE):			PKGDIR=$(pkgdir)
 $$($(2)_TARGET_ACTUAL_SOURCE):		PKG=$(2)
 $$($(2)_TARGET_ACTUAL_SOURCE):		PKGDIR=$(pkgdir)
 $$($(2)_TARGET_DIRCLEAN):		PKG=$(2)
-$$($(2)_TARGET_DIRCLEAN):		NAME=$(1)
+$$($(2)_TARGET_DIRCLEAN):		NAME=$$($(2)_BASENAME)
 
 # legal-info: declare dependencies and set values used later for the manifest
 ifneq ($$($(2)_LICENSE_FILES),)

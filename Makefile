@@ -88,10 +88,11 @@ BASE_DIR := $(CANONICAL_O)
 $(if $(BASE_DIR),, $(error output directory "$(O)" does not exist))
 
 PER_PACKAGE_DIR := $(BASE_DIR)/per-package
-export BUILD_DIR := $(BASE_DIR)/build
+export TMP_DIR := $(BASE_DIR)/tmp
 BASE_INSTALL_DIR := $(BASE_DIR)/install
-STAGING_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_NAME)/staging
-INSTALL_DIR = $(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_NAME)/install,$(BASE_INSTALL_DIR))
+STAGING_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/staging
+INSTALL_DIR = $(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/install,$(BASE_INSTALL_DIR))
+BUILD_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/build
 
 ZCAT = gzip -d -c
 BZCAT = bzcat
@@ -146,11 +147,11 @@ install: $(PACKAGES) $(INSTALL_DIR)
 
 
 	$(if $(INSTALL_DIR_FILES_LISTS), \
-		cat $(INSTALL_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list.txt
+		cat $(INSTALL_DIR_FILES_LISTS)) > $(BASE_DIR)/packages-file-list.txt
 	$(if $(HOST_DIR_FILES_LISTS), \
-		cat $(HOST_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list-host.txt
+		cat $(HOST_DIR_FILES_LISTS)) > $(BASE_DIR)/packages-file-list-host.txt
 	$(if $(STAGING_DIR_FILES_LISTS), \
-		cat $(STAGING_DIR_FILES_LISTS)) > $(BUILD_DIR)/packages-file-list-staging.txt
+		cat $(STAGING_DIR_FILES_LISTS)) > $(BASE_DIR)/packages-file-list-staging.txt
 
 	touch $(INSTALL_DIR)/usr
 
@@ -179,7 +180,7 @@ printvars:
 # ' Syntax colouring...
 
 .PHONY: prepare
-prepare: $(BUILD_DIR) $(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR)
+prepare: $(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR)
 
-$(BUILD_DIR) $(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR):
+$(BASE_INSTALL_DIR) $(PER_PACKAGE_DIR):
 	@mkdir -p $@
