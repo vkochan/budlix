@@ -5,6 +5,7 @@
 ################################################################################
 
 LUA_VERSION = 5.3.5
+LUA_ABIVER = 5.3
 LUA_SITE = http://www.lua.org/ftp
 LUA_LICENSE = MIT
 LUA_DEPENDENCIES = readline ncurses
@@ -26,7 +27,7 @@ define LUA_BUILD_CMDS
 	MYLIBS="$(LUA_MYLIBS)" \
 	BUILDMODE=$(LUA_BUILDMODE) \
 	PKG_VERSION=$(LUA_VERSION) -C $(@D)/src all
-	sed -e "s/@VERSION@/$(LUA_VERSION)/;s/@ABI@/$(LUAINTERPRETER_ABIVER)/;s/@MYLIBS@/$(LUA_MYLIBS)/" \
+	sed -e "s/@VERSION@/$(LUA_VERSION)/;s/@ABI@/$(LUA_ABIVER)/;s/@MYLIBS@/$(LUA_MYLIBS)/" \
 		$(LUA_PKGDIR)/lua.pc.in > $(@D)/lua.pc
 endef
 
@@ -37,3 +38,5 @@ define LUA_INSTALL_CMDS
 endef
 
 $(eval $(generic-package))
+
+LUA_RUN = $(STAGING_DIR)/usr/bin/lua
