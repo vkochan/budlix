@@ -6,7 +6,7 @@
 
 VIS_VERSION = 07ffa2ed847b69ed90859e9fbea40313343f7b7d
 VIS_SITE = $(call github,martanne,vis,$(VIS_VERSION))
-VIS_DEPENDENCIES = ncurses lua libtermkey
+VIS_DEPENDENCIES = ncurses lua lpeg libtermkey
 VIS_CONF_OPTS = --enable-curses --enable-lua
 
 define VIS_CONFIGURE_CMDS
