@@ -89,10 +89,10 @@ $(if $(BASE_DIR),, $(error output directory "$(O)" does not exist))
 
 PER_PACKAGE_DIR := $(BASE_DIR)/per-package
 
-STAGING_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/staging
 INSTALL_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/install
 BUILD_DIR = $(PER_PACKAGE_DIR)/$($(PKG)_BASENAME)/build
 SYSROOT_DIR = $(BASE_DIR)/sysroot
+STAGING_DIR = $(SYSROOT_DIR)
 
 export TMP_DIR := $(BASE_DIR)/tmp
 
@@ -144,7 +144,6 @@ $(BASE_DIR)/.config:
 .PHONY: install
 install: $(PACKAGES) $(SYSROOT_DIR)
 	@$(call MESSAGE,"Finalizing sysroot directory")
-	$(call per-package-rsync,$(sort $(PACKAGES)),install,$(SYSROOT_DIR))
 	$(foreach hook,$(TARGET_FINALIZE_HOOKS),$($(hook))$(sep))
 
 
@@ -154,8 +153,6 @@ install: $(PACKAGES) $(SYSROOT_DIR)
 		cat $(HOST_DIR_FILES_LISTS)) > $(BASE_DIR)/packages-file-list-host.txt
 	$(if $(STAGING_DIR_FILES_LISTS), \
 		cat $(STAGING_DIR_FILES_LISTS)) > $(BASE_DIR)/packages-file-list-staging.txt
-
-	mkdir -p $(SYSROOT_DIR)/usr
 
 .PHONY: sysroot-enter
 sysroot-enter:

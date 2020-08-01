@@ -120,7 +120,6 @@ endif
 # Retrieve the archive
 $(PER_PACKAGE_DIR)/%/build/.stamp_downloaded:
 	@$(call step_start,download)
-	$(call prepare-per-package-directory,$($(PKG)_FINAL_DOWNLOAD_DEPENDENCIES))
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 # Only show the download message if it isn't already downloaded
 	$(Q)for p in $($(PKG)_ALL_DOWNLOADS); do \
@@ -147,7 +146,6 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_actual_downloaded:
 $(PER_PACKAGE_DIR)/%/build/.stamp_extracted:
 	@$(call step_start,extract)
 	@$(call MESSAGE,"Extracting")
-	$(call prepare-per-package-directory,$($(PKG)_FINAL_EXTRACT_DEPENDENCIES))
 	$(foreach hook,$($(PKG)_PRE_EXTRACT_HOOKS),$(call $(hook))$(sep))
 	$(Q)mkdir -p $(@D)
 	$($(PKG)_EXTRACT_CMDS)
@@ -203,7 +201,6 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_configured:
 	@mkdir -p $(STAGING_DIR)
 	@$(call step_start,configure)
 	@$(call MESSAGE,"Configuring")
-	$(call prepare-per-package-directory,$($(PKG)_FINAL_RECURSIVE_DEPENDENCIES))
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$($(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -238,6 +235,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_installed:
 	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
 		$(RM) -f $(addprefix $(INSTALL_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
 	fi
+	$(call per-package-rsync,$(PKG),install,$(SYSROOT_DIR))
 	@$(call step_end,install-target)
 	$(Q)touch $@
 
@@ -546,13 +544,7 @@ $$($(2)_TARGET_INSTALL_TARGET):	$$($(2)_TARGET_BUILD)
 
 $(1)-uninstall:	PKG = $(2)
 $(1)-uninstall:
-	@support/scripts/links.sh -u -s $(BASE_DIR)/install -d $$(INSTALL_DIR)
-	@for p in $$($$(PKG)_RDEPENDENCIES); \
-	do \
-	    support/scripts/links.sh -u \
-	    -s $$(PER_PACKAGE_DIR)/$$$$p/staging \
-	    -d $$(INSTALL_DIR); \
-	done;
+	@support/scripts/links.sh -u -s $$(SYSROOT_DIR) -d $$(INSTALL_DIR)
 
 $(1)-build:		$$($(2)_TARGET_BUILD)
 $$($(2)_TARGET_BUILD):	$$($(2)_TARGET_CONFIGURE)
