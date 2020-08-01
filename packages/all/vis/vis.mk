@@ -10,15 +10,15 @@ VIS_DEPENDENCIES = ncurses lua libtermkey
 VIS_CONF_OPTS = --enable-curses --enable-lua
 
 define VIS_CONFIGURE_CMDS
-	(cd $(@D); ./configure --prefix=$(INSTALL_DIR) $(VIS_CONF_OPTS))
+	(cd $(@D); $(BUILD_MAKE_ENV) ./configure --prefix=$(INSTALL_DIR)/usr $(VIS_CONF_OPTS))
 endef
 
 define VIS_BUILD_CMDS
-	$(BUILD_OPTS) $(MAKE) -C $(@D)
+	$(MAKE) $(BUILD_OPTS) -C $(@D)
 endef
 
 define VIS_INSTALL_CMDS
-	$(MAKE) -C $(@D) install
+	$(MAKE) $(BUILD_OPTS) -C $(@D) install
 endef
 
 $(eval $(generic-package))
