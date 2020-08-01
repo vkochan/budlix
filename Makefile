@@ -154,9 +154,12 @@ install: $(PACKAGES) $(SYSROOT_DIR)
 	$(if $(STAGING_DIR_FILES_LISTS), \
 		cat $(STAGING_DIR_FILES_LISTS)) > $(BASE_DIR)/packages-file-list-staging.txt
 
+SYSROOT_BIN_PATH = $(SYSROOT_DIR)/usr/bin
+SYSROOT_LIB_PATH = $(SYSROOT_DIR)/usr/lib
+
 .PHONY: sysroot-enter
 sysroot-enter:
-	PATH=$(SYSROOT_DIR)/bin:$(SYSROOT_DIR)/sbin:$(SYSROOT_DIR)/usr/bin:$(SYSROOT_DIR)/usr/sbin:$$PATH sh
+	PATH=$(SYSROOT_BIN_PATH):$$PATH LD_LIBRARY_PATH=$(SYSROOT_LIB_PATH) sh
 
 .PHONY: show-packages
 show-packages:
