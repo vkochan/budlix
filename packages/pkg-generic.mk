@@ -535,6 +535,13 @@ $(1)-disable-rdepends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE
 
 ifeq ($$(CONFIG_PKG_$(2)),y)
 
+ifeq ($$($(2)_USE_FOR_BUILD),YES)
+ifneq ($$(BUILD_PATH),)
+BUILD_PATH_PREPEND := $$(BUILD_PATH):
+endif
+BUILD_PATH := $$(BUILD_PATH_PREPEND)$$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)/install/usr/bin
+endif
+
 # human-friendly targets and target sequencing
 $(1):			$(1)-install
 $(1)-install:		$(1)-install-target

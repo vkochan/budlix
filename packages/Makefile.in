@@ -16,7 +16,7 @@ BUILD_CC += -specs $(STAGING_DIR)/lib/musl-gcc.specs
 endif
 
 BUILD_MAKE_ENV = \
-	PATH="$(BUILD_PATH)" \
+	PATH="$(BUILD_PATH):$(PATH)" \
 	HELP2MAN="$(HELP2MAN)" \
 	LIBTOOL="$(LIBTOOL)" \
 	PKG_CONFIG="$(PKG_CONFIG_HOST_BINARY)" \

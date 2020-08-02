@@ -8,6 +8,7 @@ LUA_VERSION = 5.3.5
 LUA_ABIVER = 5.3
 LUA_SITE = http://www.lua.org/ftp
 LUA_LICENSE = MIT
+LUA_USE_FOR_BUILD = YES
 LUA_DEPENDENCIES = readline ncurses
 
 LUA_CFLAGS = -Wall -fPIC -DLUA_USE_POSIX

@@ -11,6 +11,7 @@ PERL_SITE = http://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.xz
 PERL_LICENSE = Artistic or GPL-1.0+
 PERL_LICENSE_FILES = Artistic Copying README
+PERL_USE_FOR_BUILD = YES
 
 PERL_CONF_OPTS = \
 	-des \

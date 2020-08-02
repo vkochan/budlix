@@ -104,7 +104,7 @@ TAR = tar
 TAR_OPTIONS = -xf
 
 # Quotes are needed for spaces and all in the original PATH content.
-BUILD_PATH = "$(STAGING_DIR)/usr/bin:$(STAGING_DIR)/usr/sbin:$(PATH)"
+BUILD_PATH :=
 
 # We call make recursively to build packages. The command-line overrides that
 # are passed to Buildroot don't apply to those package build systems. In

@@ -11,6 +11,7 @@ PYTHON_SITE = https://python.org/ftp/python/$(PYTHON_VERSION)
 PYTHON_LICENSE = Python-2.0, others
 PYTHON_LICENSE_FILES = LICENSE
 PYTHON_AUTORECONF = YES
+PYTHON_USE_FOR_BUILD = YES
 PYTHON_DEPENDENCIES = libffi zlib expat
 
 # Make sure that LD_LIBRARY_PATH overrides -rpath.
