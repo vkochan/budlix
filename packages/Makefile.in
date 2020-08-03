@@ -9,7 +9,9 @@ include packages/pkg-generic.mk
 include packages/pkg-autotools.mk
 include packages/pkg-luarocks.mk
 
-BUILD_CC = $(CC)
+BUILD_CC        = $(CC)
+BUILD_CXX       = g++
+BUILD_AR        = ar
 
 ifeq ($(CONFIG_PKG_MUSL),y)
 BUILD_CC += -specs $(STAGING_DIR)/lib/musl-gcc.specs
@@ -31,6 +33,8 @@ BUILD_CPPFLAGS = -I$(STAGING_DIR)/usr/include
 
 BUILD_OPTS = \
 	$(BUILD_MAKE_ENV) \
+	AR=$(BUILD_AR) \
+	CXX=$(BUILD_CXX) \
 	CC="$(BUILD_CC)" \
 	LDFLAGS="$(BUILD_LDFLAGS)" \
 	CFLAGS="$(BUILD_CFLAGS)" \
