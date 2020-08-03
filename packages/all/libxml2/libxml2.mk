@@ -14,7 +14,7 @@ LIBXML2_DEPENDENCIES = pkgconf
 
 LIBXML2_CONF_OPTS = --with-gnu-ld --without-python --without-debug
 
-ifeq ($(CONFIG_PKG_ZLIB),y)
+ifeq ($(PACKAGE_ZLIB),y)
 LIBXML2_DEPENDENCIES += zlib
 LIBXML2_CONF_OPTS += --with-zlib=$(STAGING_DIR)/usr
 else

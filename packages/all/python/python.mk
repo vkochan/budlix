@@ -24,13 +24,13 @@ PYTHON_CONF_ENV += \
 	ac_cv_prog_HAS_HG=/bin/false \
 	ac_cv_prog_SVNVERSION=/bin/false
 
-ifeq ($(CONFIG_PKG_READLINE),y)
+ifeq ($(PACKAGE_READLINE),y)
 PYTHON_DEPENDENCIES += readline
 else
 PYTHON_CONF_OPTS += --disable-readline
 endif
 
-ifeq ($(CONFIG_PKG_PYTHON_CURSES),y)
+ifeq ($(PACKAGE_PYTHON_CURSES),y)
 PYTHON_DEPENDENCIES += ncurses
 else
 PYTHON_CONF_OPTS += --disable-curses

@@ -447,7 +447,7 @@ $(2)_REDIST_SOURCES_DIR = $$(REDIST_SOURCES_DIR_$$(call UPPERCASE,$(4)))/$$($(2)
 
 $(2)_ADD_LIBC_DEPENDENCY	?= YES
 
-ifeq ($$(CONFIG_PKG_MUSL),y)
+ifeq ($$(PACKAGE_MUSL),y)
 ifeq ($$($(2)_ADD_LIBC_DEPENDENCY),YES)
 $(2)_DEPENDENCIES += musl
 endif
@@ -516,21 +516,21 @@ $(2)_PRE_INSTALL_HOOKS          ?=
 $(2)_POST_INSTALL_HOOKS         ?=
 
 $(1)-enable: $$(BASE_DIR)/.config
-	@if ! grep -q 'CONFIG_PKG_$(2)=y' $$(BASE_DIR)/.config; then \
-	    echo 'CONFIG_PKG_$(2)=y' >> $$(BASE_DIR)/.config; \
+	@if ! grep -q 'PACKAGE_$(2)=y' $$(BASE_DIR)/.config; then \
+	    echo 'PACKAGE_$(2)=y' >> $$(BASE_DIR)/.config; \
 	fi
 	@for p in $$(call UPPERCASE,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES)); do \
-	    echo "CONFIG_PKG_$$$$p=y" >> $$(BASE_DIR)/.config; \
+	    echo "PACKAGE_$$$$p=y" >> $$(BASE_DIR)/.config; \
 	done
 
 .PHONY: $(1)-disable
 $(1)-disable: $$(BASE_DIR)/.config $(1)-dirclean $(1)-uninstall
-	@$$(SED) $$(BASE_DIR)/.config -e '/^CONFIG_PKG_$(2)=.*/d'
+	@$$(SED) $$(BASE_DIR)/.config -e '/^PACKAGE_$(2)=.*/d'
 
 $(1)-disable-depends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES),$$(p)-disable)
 $(1)-disable-rdepends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE_RDEPENDENCIES),$$(p)-disable)
 
-ifeq ($$(CONFIG_PKG_$(2)),y)
+ifeq ($$(PACKAGE_$(2)),y)
 
 ifeq ($$($(2)_USE_FOR_BUILD),YES)
 ifneq ($$(BUILD_PATH),)

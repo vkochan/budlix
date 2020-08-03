@@ -13,7 +13,7 @@ BUILD_CC        = $(CC)
 BUILD_CXX       = g++
 BUILD_AR        = ar
 
-ifeq ($(CONFIG_PKG_MUSL),y)
+ifeq ($(PACKAGE_MUSL),y)
 BUILD_CC += -specs $(STAGING_DIR)/lib/musl-gcc.specs
 endif
 
