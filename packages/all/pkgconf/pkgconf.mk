@@ -10,7 +10,7 @@ PKGCONF_SOURCE = pkgconf-$(PKGCONF_VERSION).tar.xz
 PKGCONF_LICENSE = pkgconf license
 PKGCONF_LICENSE_FILES = COPYING
 
-PKG_CONFIG_HOST_BINARY = $(STAGING_DIR)/usr/bin/pkg-config
+PKG_CONFIG_BINARY = $(STAGING_DIR)/usr/bin/pkg-config
 
 define PKGCONF_LINK_PKGCONFIG
 	ln -sf pkgconf $(INSTALL_DIR)/usr/bin/pkg-config
