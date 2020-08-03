@@ -32,7 +32,7 @@ define LIBOPENSSL_CONFIGURE_CMDS
 		$(BUILD_OPTS) \
 		./Configure \
 		$(LIBOPENSSL_BUILD_ARCH) \
-		--prefix=$(INSTALL_DIR) \
+		--prefix=$(INSTALL_DIR)/usr \
 		--openssldir=$(INSTALL_DIR)/etc/ssl \
 		no-rc5 \
 		enable-camellia \
