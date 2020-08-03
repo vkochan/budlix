@@ -232,9 +232,6 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_installed:
 		$(or $($(PKG)_INSTALL_INIT_OPENRC), \
 			$($(PKG)_INSTALL_INIT_SYSV)))
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
-	$(Q)if test -n "$($(PKG)_CONFIG_SCRIPTS)" ; then \
-		$(RM) -f $(addprefix $(INSTALL_DIR)/usr/bin/,$($(PKG)_CONFIG_SCRIPTS)) ; \
-	fi
 	$(call per-package-rsync,$(PKG),install,$(SYSROOT_DIR))
 	@$(call step_end,install-target)
 	$(Q)touch $@
