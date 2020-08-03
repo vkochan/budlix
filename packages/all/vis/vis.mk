@@ -10,7 +10,7 @@ VIS_DEPENDENCIES = ncurses lua lpeg libtermkey
 VIS_CONF_OPTS = --enable-curses --enable-lua
 
 define VIS_CONFIGURE_CMDS
-	(cd $(@D); $(BUILD_MAKE_ENV) ./configure --prefix=$(INSTALL_DIR)/usr $(VIS_CONF_OPTS))
+	(cd $(@D); $(BUILD_MAKE_ENV) $(BUILD_OPTS) ./configure --prefix=$(INSTALL_DIR)/usr $(VIS_CONF_OPTS))
 endef
 
 define VIS_BUILD_CMDS
