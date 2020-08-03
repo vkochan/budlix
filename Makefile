@@ -138,6 +138,41 @@ include mirrors.mk
 include packages/Makefile.in
 include $(sort $(wildcard packages/all/*/*.mk))
 
+# Some global targets do not trigger a build, but are used to collect
+# metadata, or do various checks. When such targets are triggered,
+# some packages should not do their configuration sanity
+# checks. Provide them a BUILDING variable set to 'y' when we're
+# actually building and they should do their sanity checks.
+#
+# We're building in two situations: when MAKECMDGOALS is empty
+# (default target is to build), or when MAKECMDGOALS contains
+# something else than one of the nobuild_targets.
+nobuild_targets := %-enable %-disable source %-source \
+	legal-info %-legal-info external-deps _external-deps \
+	clean distclean help show-targets graph-depends \
+	%-graph-depends %-show-depends %-show-version \
+	graph-build graph-size list-defconfigs \
+	savedefconfig update-defconfig printvars
+ifeq ($(MAKECMDGOALS),)
+BUILDING = y
+else ifneq ($(filter-out $(nobuild_targets),$(MAKECMDGOALS)),)
+BUILDING = y
+endif
+
+# Ensure the virtual package has an implementation defined.
+define check-virtual-package
+ifeq ($$($(2)_IS_VIRTUAL)$$(PACKAGE_$(2)),YESy)
+ifeq ($$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),)
+$$(error No implementation selected for virtual package $(1). Configuration error)
+endif
+endif
+endef
+
+ifeq ($(BUILDING),y)
+$(foreach pkg,$(call UPPERCASE,$(PACKAGES)),\
+	$(eval $(call check-virtual-package,$($(pkg)_NAME),$(pkg))$(sep)))
+endif
+
 $(BASE_DIR)/.config:
 	@touch $@
 

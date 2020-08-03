@@ -8,6 +8,7 @@ include packages/pkg-download.mk
 include packages/pkg-generic.mk
 include packages/pkg-autotools.mk
 include packages/pkg-luarocks.mk
+include packages/pkg-virtual.mk
 
 BUILD_CC        = $(CC)
 BUILD_CXX       = g++
