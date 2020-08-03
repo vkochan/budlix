@@ -7,7 +7,7 @@
 PYTHON_VERSION_MAJOR = 2.7
 PYTHON_VERSION = $(PYTHON_VERSION_MAJOR).18
 PYTHON_SOURCE = Python-$(PYTHON_VERSION).tar.xz
-PYTHON_SITE = https://python.org/ftp/python/$(PYTHON_VERSION)
+PYTHON_SITE = https://www.python.org/ftp/python/$(PYTHON_VERSION)
 PYTHON_LICENSE = Python-2.0, others
 PYTHON_LICENSE_FILES = LICENSE
 PYTHON_AUTORECONF = YES
@@ -43,6 +43,7 @@ PYTHON_CONF_OPTS += \
 	--without-cxx-main \
 	--disable-sqlite3 \
 	--disable-tk \
+	--with-expat=system \
 	--disable-codecs-cjk \
 	--disable-sqlite3 \
 	--disable-lib2to3 \
@@ -60,7 +61,6 @@ define PYTHON_INSTALL_PYTHON_SYMLINK
 	ln -sf python2-config $(INSTALL_DIR)/usr/bin/python-config
 	ln -sf python2 $(INSTALL_DIR)/usr/bin/python
 endef
-
 PYTHON_POST_INSTALL_HOOKS += PYTHON_INSTALL_PYTHON_SYMLINK
 
 # Provided to other packages
