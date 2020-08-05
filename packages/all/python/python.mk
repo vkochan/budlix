@@ -57,11 +57,13 @@ PYTHON_CONF_OPTS += \
 	--disable-test-modules
 
 # Always install the python-config symlink in the staging tree
+ifneq ($(PACKAGE_PYTHON3),y)
 define PYTHON_INSTALL_PYTHON_SYMLINK
 	ln -sf python2-config $(INSTALL_DIR)/usr/bin/python-config
 	ln -sf python2 $(INSTALL_DIR)/usr/bin/python
 endef
 PYTHON_POST_INSTALL_HOOKS += PYTHON_INSTALL_PYTHON_SYMLINK
+endif
 
 # Provided to other packages
 PYTHON_PATH = $(STAGING_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/sysconfigdata/
