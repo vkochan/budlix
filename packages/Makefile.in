@@ -9,6 +9,7 @@ include packages/pkg-generic.mk
 include packages/pkg-autotools.mk
 include packages/pkg-luarocks.mk
 include packages/pkg-python.mk
+include packages/pkg-meson.mk
 include packages/pkg-perl.mk
 include packages/pkg-virtual.mk
 
