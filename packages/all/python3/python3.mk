@@ -11,14 +11,16 @@ PYTHON3_SITE = https://python.org/ftp/python/$(PYTHON3_VERSION)
 PYTHON3_LICENSE = Python-2.0, others
 PYTHON3_LICENSE_FILES = LICENSE
 PYTHON3_DEPENDENCIES = libffi zlib expat
+PYTHON3_AUTORECONF = YES
 PYTHON3_USE_FOR_BUILD = YES
 
 PYTHON3_CONF_OPTS += \
-	--with-ensurepip=yes \
+	--without-ensurepip \
 	--without-cxx-main \
 	--disable-sqlite3 \
 	--disable-tk \
 	--with-expat=system \
+	--with-system-expat \
 	--disable-codecs-cjk \
 	--disable-nis \
 	--enable-unicodedata \
@@ -49,6 +51,6 @@ PYTHON3_POST_INSTALL_HOOKS += PYTHON3_INSTALL_SYMLINK
 endif
 
 # Provided to other packages
-PYTHON3_PATH = $(STAGING_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR)/
+PYTHON3_PATH = "$(STAGING_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR)/:$(STAGING_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR)/site-packages/"
 
 $(eval $(autotools-package))
