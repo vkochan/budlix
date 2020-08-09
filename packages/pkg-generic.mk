@@ -520,7 +520,9 @@ $(1)-enable: $$(BASE_DIR)/.config
 	    echo 'PACKAGE_$(2)=y' >> $$(BASE_DIR)/.config; \
 	fi
 	@for p in $$(call UPPERCASE,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES)); do \
-	    echo "PACKAGE_$$$$p=y" >> $$(BASE_DIR)/.config; \
+	    if ! grep -q 'PACKAGE_$$$$p=y' $$(BASE_DIR)/.config; then \
+	      echo "PACKAGE_$$$$p=y" >> $$(BASE_DIR)/.config; \
+	    fi \
 	done
 
 .PHONY: $(1)-disable
