@@ -515,15 +515,20 @@ $(2)_POST_BUILD_HOOKS           ?=
 $(2)_PRE_INSTALL_HOOKS          ?=
 $(2)_POST_INSTALL_HOOKS         ?=
 
-$(1)-enable: $$(BASE_DIR)/.config
-	@if ! grep -q 'PACKAGE_$(2)=y' $$(BASE_DIR)/.config; then \
-	    echo 'PACKAGE_$(2)=y' >> $$(BASE_DIR)/.config; \
+$(1)-enable: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_ENABLE_PACKAGES),$$(p)-enable)
+	@if ! grep -q "PACKAGE_$(2)=y" $$(BASE_DIR)/.config; then \
+	    echo "PACKAGE_$(2)=y" >> $$(BASE_DIR)/.config; \
 	fi
 	@for p in $$(call UPPERCASE,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES)); do \
-	    if ! grep -q 'PACKAGE_$$$$p=y' $$(BASE_DIR)/.config; then \
-	      echo "PACKAGE_$$$$p=y" >> $$(BASE_DIR)/.config; \
+	    if ! grep -q "PACKAGE_$$$$p=y" $$(BASE_DIR)/.config; then \
+	        echo "PACKAGE_$$$$p=y" >> $$(BASE_DIR)/.config; \
 	    fi \
 	done
+ifneq ($$($(2)_PROVIDES),)
+	@if ! grep -q "PACKAGE_PROVIDES_$$(call UPPERCASE,$$($(2)_PROVIDES))=$(1)" $$(BASE_DIR)/.config; then \
+	    echo "PACKAGE_PROVIDES_$$(call UPPERCASE,$$($(2)_PROVIDES))=$(1)" >> $$(BASE_DIR)/.config; \
+	fi
+endif
 
 .PHONY: $(1)-disable
 $(1)-disable: $$(BASE_DIR)/.config $(1)-dirclean $(1)-uninstall
@@ -767,8 +772,6 @@ endif # ifneq ($$(call qstrip,$$($(2)_SOURCE)),)
 # Ensure the calling package is the declared provider for all the virtual
 # packages it claims to be an implementation of.
 ifneq ($$($(2)_PROVIDES),)
-PACKAGE_PROVIDES_$$(call UPPERCASE,$$($(2)_PROVIDES)) = $(1) 
-
 $$(foreach pkg,$$($(2)_PROVIDES),\
 	$$(eval $$(call virt-provides-single,$$(pkg),$$(call UPPERCASE,$$(pkg)),$(1))$$(sep)))
 endif
