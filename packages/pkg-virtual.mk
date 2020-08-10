@@ -41,7 +41,9 @@ $(2)_SOURCE =
 
 $(2)_IS_VIRTUAL = YES
 
-$(2)_DEPENDENCIES += $$(call qstrip,$$(PACKAGE_PROVIDES_$(2)))
+$(2)_DEPENDENCIES += $$(if $$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),\
+			$$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),\
+			$$(call qstrip,$$($(2)_DEFAULT_PROVIDER)))
 
 ifeq ($$(PACKAGE_$(2)),y)
 PACKAGE_HAS_$(2) = y

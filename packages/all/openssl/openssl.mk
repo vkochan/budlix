@@ -4,4 +4,6 @@
 #
 ################################################################################
 
+OPENSSL_DEFAULT_PROVIDER = libopenssl
+
 $(eval $(virtual-package))
