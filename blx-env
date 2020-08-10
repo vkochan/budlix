@@ -1,0 +1,9 @@
+#!/bin/sh
+
+SYSROOT=${PWD}/output/sysroot
+
+PATH=${SYSROOT}/usr/bin:${SYSROOT}/usr/sbin:${PATH} \
+	LD_LIBRARY_PATH=${SYSROOT}/usr/lib \
+	MANPATH=${SYSROOT}/usr/man:${SYSROOT}/usr/share/man \
+	TERMINFO=${SYSROOT}/usr/share/terminfo \
+	$@
