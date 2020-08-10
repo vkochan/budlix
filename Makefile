@@ -192,10 +192,6 @@ install: $(PACKAGES) $(SYSROOT_DIR)
 SYSROOT_BIN_PATH = $(SYSROOT_DIR)/usr/bin
 SYSROOT_LIB_PATH = $(SYSROOT_DIR)/usr/lib
 
-.PHONY: sysroot-enter
-sysroot-enter:
-	PATH=$(SYSROOT_BIN_PATH):$$PATH LD_LIBRARY_PATH=$(SYSROOT_LIB_PATH) sh
-
 .PHONY: show-packages
 show-packages:
 	@echo $(sort $(PACKAGES))
