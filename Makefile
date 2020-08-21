@@ -103,6 +103,10 @@ LZCAT = lzip -d -c
 TAR = tar
 TAR_OPTIONS = -xf
 
+RSYNC_EXCLUSIONS = \
+	--exclude .svn --exclude .git --exclude .hg --exclude .bzr \
+	--exclude CVS
+
 # Quotes are needed for spaces and all in the original PATH content.
 BUILD_PATH :=
 
