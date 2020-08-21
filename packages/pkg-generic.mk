@@ -517,27 +517,27 @@ $(2)_POST_BUILD_HOOKS           ?=
 $(2)_PRE_INSTALL_HOOKS          ?=
 $(2)_POST_INSTALL_HOOKS         ?=
 
-$(1)-enable: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_ENABLE_PACKAGES),$$(p)-enable)
-	@if ! grep -q "PACKAGE_$(2)=y" $$(BASE_DIR)/.config; then \
-	    echo "PACKAGE_$(2)=y" >> $$(BASE_DIR)/.config; \
+$(1)-enable: $$(CONFIG_FILE) $$(foreach p,$$($(2)_ENABLE_PACKAGES),$$(p)-enable)
+	@if ! grep -q "PACKAGE_$(2)=y" $$(CONFIG_FILE); then \
+	    echo "PACKAGE_$(2)=y" >> $$(CONFIG_FILE); \
 	fi
 	@for p in $$(call UPPERCASE,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES)); do \
-	    if ! grep -q "PACKAGE_$$$$p=y" $$(BASE_DIR)/.config; then \
-	        echo "PACKAGE_$$$$p=y" >> $$(BASE_DIR)/.config; \
+	    if ! grep -q "PACKAGE_$$$$p=y" $$(CONFIG_FILE); then \
+	        echo "PACKAGE_$$$$p=y" >> $$(CONFIG_FILE); \
 	    fi \
 	done
 ifneq ($$($(2)_PROVIDES),)
-	@if ! grep -q "PACKAGE_PROVIDES_$$(call UPPERCASE,$$($(2)_PROVIDES))=$(1)" $$(BASE_DIR)/.config; then \
-	    echo "PACKAGE_PROVIDES_$$(call UPPERCASE,$$($(2)_PROVIDES))=$(1)" >> $$(BASE_DIR)/.config; \
+	@if ! grep -q "PACKAGE_PROVIDES_$$(call UPPERCASE,$$($(2)_PROVIDES))=$(1)" $$(CONFIG_FILE); then \
+	    echo "PACKAGE_PROVIDES_$$(call UPPERCASE,$$($(2)_PROVIDES))=$(1)" >> $$(CONFIG_FILE); \
 	fi
 endif
 
 .PHONY: $(1)-disable
-$(1)-disable: $$(BASE_DIR)/.config $(1)-dirclean $(1)-uninstall
-	@$$(SED) $$(BASE_DIR)/.config -e '/^PACKAGE_$(2)=.*/d'
+$(1)-disable: $$(CONFIG_FILE) $(1)-dirclean $(1)-uninstall
+	@$$(SED) $$(CONFIG_FILE) -e '/^PACKAGE_$(2)=.*/d'
 
-$(1)-disable-depends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES),$$(p)-disable)
-$(1)-disable-rdepends: $$(BASE_DIR)/.config $$(foreach p,$$($(2)_FINAL_RECURSIVE_RDEPENDENCIES),$$(p)-disable)
+$(1)-disable-depends: $$(CONFIG_FILE) $$(foreach p,$$($(2)_FINAL_RECURSIVE_DEPENDENCIES),$$(p)-disable)
+$(1)-disable-rdepends: $$(CONFIG_FILE) $$(foreach p,$$($(2)_FINAL_RECURSIVE_RDEPENDENCIES),$$(p)-disable)
 
 ifeq ($$(PACKAGE_$(2)),y)
 

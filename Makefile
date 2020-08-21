@@ -137,7 +137,9 @@ PACKAGES :=
 
 all: install
 
--include $(BASE_DIR)/.config
+CONFIG_FILE = $(BASE_DIR)/.budlix.mk
+
+-include $(CONFIG_FILE)
 include mirrors.mk
 include packages/Makefile.in
 include $(sort $(wildcard packages/all/*/*.mk))
@@ -177,7 +179,7 @@ $(foreach pkg,$(call UPPERCASE,$(PACKAGES)),\
 	$(eval $(call check-virtual-package,$($(pkg)_NAME),$(pkg))$(sep)))
 endif
 
-$(BASE_DIR)/.config:
+$(CONFIG_FILE):
 	@touch $@
 
 .PHONY: install
