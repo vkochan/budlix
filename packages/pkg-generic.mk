@@ -243,9 +243,11 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_dircleaned:
 
 define virt-provides-single
 ifneq ($$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),$(3))
+ifneq ($$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),)
 $$(error Configuration error: both "$(3)" and $$($(2)_PROVIDES)\
 are selected as providers for virtual package "$(1)". Only one provider can\
 be selected at a time. Please fix your configuration)
+endif
 endif
 endef
 

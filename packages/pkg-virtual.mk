@@ -45,6 +45,10 @@ $(2)_DEPENDENCIES += $$(if $$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),\
 			$$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),\
 			$$(call qstrip,$$($(2)_DEFAULT_PROVIDER)))
 
+ifeq ($$(PACKAGE_PROVIDES_$(2)),)
+PACKAGE_PROVIDES_$(2) = $$(call qstrip,$$($(2)_DEFAULT_PROVIDER))
+endif
+
 ifeq ($$(PACKAGE_$(2)),y)
 PACKAGE_HAS_$(2) = y
 endif
