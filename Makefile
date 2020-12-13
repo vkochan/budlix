@@ -137,7 +137,7 @@ PACKAGES :=
 
 all: install
 
-CONFIG_FILE = $(BASE_DIR)/.budlix.mk
+CONFIG_FILE = $(BASE_DIR)/config.mk
 
 -include $(CONFIG_FILE)
 include mirrors.mk
