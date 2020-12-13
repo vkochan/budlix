@@ -13,6 +13,7 @@ DASH_CONF_OPTS += --without-libedit
 
 define DASH_INSTALL_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/src/dash $(INSTALL_DIR)/usr/bin/dash
+	ln -sf dash $(INSTALL_DIR)/usr/bin/sh
 endef
 
 $(eval $(autotools-package))
