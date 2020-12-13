@@ -3,7 +3,7 @@
 V= @ABI@
 R= @VERSION@
 
-prefix= /usr
+prefix= @PREFIX@
 INSTALL_BIN= ${prefix}/bin
 INSTALL_INC= ${prefix}/include
 INSTALL_LIB= ${prefix}/lib

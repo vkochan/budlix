@@ -21,6 +21,8 @@ define LUA_LUACONF
 endef
 LUA_POST_PATCH_HOOKS += LUA_LUACONF
 
+LUA_PREFIX = $(STAGING_DIR)/usr
+
 define LUA_BUILD_CMDS
 	$(BUILD_MAKE_ENV) $(MAKE) \
 	CFLAGS="$(LUA_CFLAGS)" \
@@ -28,7 +30,7 @@ define LUA_BUILD_CMDS
 	MYLIBS="$(LUA_MYLIBS)" \
 	BUILDMODE=$(LUA_BUILDMODE) \
 	PKG_VERSION=$(LUA_VERSION) -C $(@D)/src all
-	sed -e "s/@VERSION@/$(LUA_VERSION)/;s/@ABI@/$(LUA_ABIVER)/;s/@MYLIBS@/$(LUA_MYLIBS)/" \
+	sed -e 's|@VERSION@|$(LUA_VERSION)|;s|@ABI@|$(LUA_ABIVER)|;s|@MYLIBS@|$(LUA_MYLIBS)|;s|@PREFIX@|$(LUA_PREFIX)|' \
 		$(LUA_PKGDIR)/lua.pc.in > $(@D)/lua.pc
 endef
 
