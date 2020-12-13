@@ -23,8 +23,14 @@ LUA_POST_PATCH_HOOKS += LUA_LUACONF
 
 LUA_PREFIX = $(STAGING_DIR)/usr
 
+LUA_MAKE_ENV = \
+	AR=$(BUILD_AR) \
+	CXX=$(BUILD_CXX) \
+	CC="$(BUILD_CC)" \
+	$(BUILD_MAKE_ENV)
+
 define LUA_BUILD_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) \
+	$(LUA_MAKE_ENV) $(MAKE) \
 	CFLAGS="$(LUA_CFLAGS)" \
 	MYLDFLAGS="$(BUILD_LDFLAGS)" \
 	MYLIBS="$(LUA_MYLIBS)" \
@@ -35,7 +41,7 @@ define LUA_BUILD_CMDS
 endef
 
 define LUA_INSTALL_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) INSTALL_TOP="$(INSTALL_DIR)/usr" -C $(@D) install
+	$(LUA_MAKE_ENV) $(MAKE) INSTALL_TOP="$(INSTALL_DIR)/usr" -C $(@D) install
 	$(INSTALL) -m 0644 -D $(@D)/lua.pc \
 		$(INSTALL_DIR)/usr/lib/pkgconfig/lua.pc
 endef

@@ -1,0 +1,30 @@
+From 6b1130264f0a4a81e121f6e6ca8865df26bc8553 Mon Sep 17 00:00:00 2001
+From: Vadym Kochan <vadim4j@gmail.com>
+Date: Mon, 14 Dec 2020 00:47:52 +0200
+Subject: [PATCH] Allow CC, CFLAGS, LDFLAGS to be overwritten
+
+Signed-off-by: Vadym Kochan <vadim4j@gmail.com>
+---
+ src/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/Makefile b/src/Makefile
+index e84225fb08f5..be2c373a30fe 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -6,9 +6,9 @@
+ # Your platform. See PLATS for possible values.
+ PLAT= none
+ 
+-CC= gcc -std=gnu99
+-CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
+-LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
++CC ?= gcc -std=gnu99
++CFLAGS ?= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
++LDFLAGS ?= $(SYSLDFLAGS) $(MYLDFLAGS)
+ LIBS= -lm $(SYSLIBS) $(MYLIBS)
+ 
+ AR= ar rcu
+-- 
+2.28.0
+
