@@ -104,8 +104,8 @@ define $(2)_INSTALL_CMDS
 			--tree "$$(INSTALL_DIR)/usr" \
 			LUA_INCDIR="$$(STAGING_DIR)/usr/include" \
 			LUA_LIBDIR="$$(STAGING_DIR)/usr/lib" \
-			CC=$$(BUILD_CC) \
-			LD=$$(BUILD_CC) \
+			CC="$$(BUILD_CC)" \
+			LD="$$(BUILD_CC)" \
 			CFLAGS="$$(LUAROCKS_CFLAGS)" \
 			LIBFLAG="-shared $$(BUILD_LDFLAGS)" \
 			$$($(2)_BUILD_OPTS) $$($(2)_ROCKSPEC)
