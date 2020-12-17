@@ -1,0 +1,154 @@
+#!/bin/sh
+
+VERSION=0.1
+
+DO_BUILD=n
+DO_INSTALL=n
+DO_UNINSTALL=n
+DO_REMOVE=n
+DO_PATCH=n
+DO_CONFIGURE=n
+
+OUTPUT_DIR=${PWD}/output
+TARGET=""
+
+usage() {
+    echo "blx - build-your-nix tool v${VERSION}"
+    echo
+    echo "Build and install packages"
+    echo
+    echo "Usage: ${0} [options] [PKGNAME]"
+    echo
+    echo "Main commands:"
+    echo "    -b,--build PACKAGE"
+    echo "         build PACKAGE"
+    echo ""
+    echo "    -i,--install PACKAGE"
+    echo "         install PACKAGE to sysroot"
+    echo ""
+    echo "    -u,--uninstall PACKAGE"
+    echo "         un-install PACKAGE from sysroot"
+    echo ""
+    echo "    -r,--remove PACKAGE"
+    echo "         remove PACKAGE from sysroot and build dir"
+    echo ""
+    echo "Other options:"
+    echo "    -o,--out PATH   output dir"
+}
+
+error() {
+    echo "error: ${1}"
+    exit 1
+}
+
+do_make() {
+    make -C ${PWD} O=${OUTPUT_DIR} $@
+}
+
+do_build() {
+    local enable
+    local build
+
+    for t in $TARGET; do
+        enable="${enable} ${t}-enable"
+        build="${build} ${t}-rebuild"
+    done
+
+    do_make $enable
+    do_make $build
+}
+
+do_install() {
+    local enable
+    local install
+
+    for t in $TARGET; do
+        enable="${enable} ${t}-enable"
+        install="${install} ${t}-reinstall"
+    done
+
+    do_make $enable
+    do_make $install
+}
+
+do_uninstall() {
+    local uninstall
+
+    for t in $TARGET; do
+        uninstall="${uninstall} ${t}-uninstall"
+    done
+
+    do_make $uninstall
+}
+
+do_remove() {
+    local uninstall
+    local disable
+    local clean
+
+    for t in $TARGET; do
+        uninstall="${uninstall} ${t}-uninstall"
+        clean="${clean} ${t}-dirclean"
+        disable="${disable} ${t}-disable"
+    done
+
+    do_make $uninstall
+    do_make $clean
+    do_make $disable
+}
+
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+
+while [ $# -gt 0 ]; do
+	case $1 in
+	    -b|--build)
+		DO_BUILD=y
+		;;
+	    -i|--install)
+		DO_INSTALL=y
+		;;
+	    -u|--uninstall)
+		DO_UNINSTALL=y
+		;;
+	    -r|--remove)
+		DO_REMOVE=y
+		;;
+	    -o|--out)
+	       OUTPUT_DIR=$2 
+	       shift
+	       ;;
+
+	    -h)
+		usage
+		exit
+		;;
+	    *)
+		TARGET="$TARGET $1"
+	esac
+
+shift
+done
+
+if [ ${DO_BUILD} == y ]; then
+    if do_build; then
+        exit 1
+    fi
+elif [ ${DO_INSTALL} == y ]; then
+    if do_install; then
+        exit 1
+    fi
+elif [ ${DO_UNINSTALL} == y ]; then
+    if do_uninstall; then
+        exit 1
+    fi
+elif [ ${DO_REMOVE} == y ]; then
+    if do_remove; then
+        exit 1
+    fi
+else
+    usage
+    exit 1
+fi
