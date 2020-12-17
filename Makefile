@@ -218,8 +218,15 @@ printvars:
 			$(info $V=$(if $(RAW_VARS),$(value $V),$($V))))))
 # ' Syntax colouring...
 
+# outputmakefile generates a Makefile in the output directory, if using a
+# separate output directory. This allows convenient use of make in the
+# output directory.
+.PHONY: outputmakefile
+outputmakefile:
+	$(Q)$(TOPDIR)/support/scripts/mkmakefile $(TOPDIR) $(O)
+
 .PHONY: prepare
-prepare: $(SYSROOT_DIR) $(PER_PACKAGE_DIR)
+prepare: $(SYSROOT_DIR) $(PER_PACKAGE_DIR) outputmakefile
 
 $(SYSROOT_DIR) $(PER_PACKAGE_DIR):
 	@mkdir -p $@
