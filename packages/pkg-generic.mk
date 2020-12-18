@@ -329,6 +329,7 @@ $(2)_BASENAME_RAW = $$(if $$($(2)_VERSION),$$($(2)_RAWNAME)-$$($(2)_VERSION),$$(
 $(2)_DL_SUBDIR ?= $$($(2)_RAWNAME)
 $(2)_DL_DIR = $$(DL_DIR)/$$($(2)_DL_SUBDIR)
 $(2)_DIR	=  $$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)/build
+$(2)_INSTALL_DIR =  $$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)/install
 
 ifndef $(2)_SUBDIR
  ifdef $(3)_SUBDIR
