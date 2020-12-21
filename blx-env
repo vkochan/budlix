@@ -1,13 +1,12 @@
 #!/bin/sh
 
-OUTPUT=${PWD}/output
+OUTPUT=${1}
 SYSROOT=${OUTPUT}/sysroot
 
 make -C ${OUTPUT} dash-enable
 make -C ${OUTPUT} dash-install
 
 PATH=${SYSROOT}/usr/bin:${SYSROOT}/usr/sbin:${PATH} \
-	LD_LIBRARY_PATH=${SYSROOT}/usr/lib \
 	MANPATH=${SYSROOT}/usr/man:${SYSROOT}/usr/share/man \
 	TERMINFO=${SYSROOT}/usr/share/terminfo \
 	SHELL=${SYSROOT}/usr/bin/sh \
