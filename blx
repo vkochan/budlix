@@ -8,8 +8,10 @@ DO_UNINSTALL=n
 DO_REMOVE=n
 DO_PATCH=n
 DO_CONFIGURE=n
+DO_SELECT_PROFILE=y
 
-OUTPUT_DIR=${PWD}/output
+BUDLIX_DIR=${HOME}/.budlix
+PROFILE="default"
 TARGET=""
 
 usage() {
@@ -31,6 +33,16 @@ usage() {
     echo ""
     echo "    -r,--remove PACKAGE"
     echo "         remove PACKAGE from sysroot and build dir"
+    echo ""
+    echo "    -p,--profile PROFILE"
+    echo "         select PROFILE (~/.budlix/profile/PROFILE) to"
+    echo "         which perform the package command:"
+    echo ""
+    echo "         1) point ${BUDLIX_DIR}/profile/current to ${BUDLIX_DIR}/profile/dev"
+    echo "             $ blx -p dev"
+    echo ""
+    echo "         2) only install package in selected profile (w/o changin current profile):"
+    echo "             $ blx -p dev -i musl"
     echo ""
     echo "Other options:"
     echo "    -o,--out PATH   output dir"
@@ -121,6 +133,12 @@ while [ $# -gt 0 ]; do
 	       shift
 	       ;;
 
+	    -p|--profile)
+               DO_SELECT_PROFILE="y"
+	       PROFILE=$2
+	       shift
+	       ;;
+
 	    -h)
 		usage
 		exit
@@ -131,6 +149,12 @@ while [ $# -gt 0 ]; do
 
 shift
 done
+
+if [ -z "${OUTPUT_DIR}" ]; then
+    OUTPUT_DIR=${BUDLIX_DIR}/profile/${PROFILE}
+fi
+
+mkdir -p ${OUTPUT_DIR}
 
 if [ ${DO_BUILD} == y ]; then
     if do_build; then
@@ -148,6 +172,8 @@ elif [ ${DO_REMOVE} == y ]; then
     if do_remove; then
         exit 1
     fi
+elif [ ${DO_SELECT_PROFILE} == y ]; then
+    ln -sf ${PROFILE} ${BUDLIX_DIR}/profile/current
 else
     usage
     exit 1
