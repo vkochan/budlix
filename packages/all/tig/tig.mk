@@ -6,7 +6,7 @@
 
 TIG_VERSION = 2.5.1
 TIG_SITE = $(call github,jonas,tig,tig-$(TIG_VERSION))
-TIG_DEPENDENCIES = ncurses
+TIG_DEPENDENCIES = readline
 TIG_ENABLE_PACKAGES = git
 
 define TIG_RUN_AUTOGEN
