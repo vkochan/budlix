@@ -9,6 +9,7 @@ DO_REMOVE=n
 DO_PATCH=n
 DO_CONFIGURE=n
 DO_SELECT_PROFILE=y
+DO_EXEC=n
 
 BUDLIX_DIR=${HOME}/.budlix
 PROFILE="default"
@@ -44,6 +45,9 @@ usage() {
     echo "         2) only install package in selected profile (w/o changin current profile):"
     echo "             $ blx -p dev -i musl"
     echo ""
+    echo "    -x,--exec"
+    echo "        execute in PROFILE (current or specified via -p)"
+    echo ""
     echo "Other options:"
     echo "    -o,--out PATH   output dir"
 }
@@ -51,6 +55,19 @@ usage() {
 error() {
     echo "error: ${1}"
     exit 1
+}
+
+do_exec() {
+    local sysroot=${OUTPUT_DIR}/sysroot
+
+    make -C ${OUTPUT_DIR} dash-enable
+    make -C ${OUTPUT_DIR} dash-install
+
+    PATH=${sysroot}/usr/bin:${sysroot}/usr/sbin:${PATH} \
+    MANPATH=${sysroot}/usr/man:${sysroot}/usr/share/man \
+    TERMINFO=${sysroot}/usr/share/terminfo \
+    SHELL=${sysroot}/usr/bin/sh \
+    ${sysroot}/usr/bin/sh
 }
 
 do_make() {
@@ -139,6 +156,10 @@ while [ $# -gt 0 ]; do
 	       shift
 	       ;;
 
+	    -x|--exec)
+               DO_EXEC="y"
+	       ;;
+
 	    -h)
 		usage
 		exit
@@ -170,6 +191,10 @@ elif [ ${DO_UNINSTALL} == y ]; then
     fi
 elif [ ${DO_REMOVE} == y ]; then
     if do_remove; then
+        exit 1
+    fi
+elif [ ${DO_EXEC} == y ]; then
+    if do_exec; then
         exit 1
     fi
 elif [ ${DO_SELECT_PROFILE} == y ]; then
