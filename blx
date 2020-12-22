@@ -63,6 +63,12 @@ do_exec() {
     make -C ${OUTPUT_DIR} dash-enable
     make -C ${OUTPUT_DIR} dash-install
 
+    export SYSROOT=${sysroot}
+
+    if [ -x ${OUTPUT_DIR}/profile.sh ]; then
+        source ${OUTPUT_DIR}/profile.sh
+    fi
+
     PATH=${sysroot}/usr/bin:${sysroot}/usr/sbin:${PATH} \
     MANPATH=${sysroot}/usr/man:${sysroot}/usr/share/man \
     TERMINFO=${sysroot}/usr/share/terminfo \
