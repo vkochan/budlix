@@ -140,6 +140,7 @@ all: install
 CONFIG_FILE = $(BASE_DIR)/config.mk
 
 -include $(CONFIG_FILE)
+-include $(BASE_DIR)/profile.mk
 include mirrors.mk
 include packages/Makefile.in
 include $(sort $(wildcard packages/all/*/*.mk))
@@ -181,6 +182,21 @@ endif
 
 $(CONFIG_FILE):
 	@touch $@
+
+deps: $(CONFIG_FILE) $(foreach p,$(PACKAGES),$(p)-enable)
+	@$(call MESSAGE,"Checking all dependencies")
+
+.PHONY: build
+build: $(foreach p,$(PACKAGES),$(p)-build)
+	@$(call MESSAGE,"Building all packages")
+
+.PHONY: rebuild
+rebuild: $(foreach p,$(PACKAGES),$(p)-rebuild)
+	@$(call MESSAGE,"Re-building all packages")
+
+.PHONY: uninstall
+uninstall: $(foreach p,$(PACKAGES),$(p)-uninstall)
+	@$(call MESSAGE,"Uninstalling all packages")
 
 .PHONY: install
 install: $(PACKAGES) $(SYSROOT_DIR)

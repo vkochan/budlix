@@ -89,8 +89,14 @@ do_build() {
         build="${build} ${t}-rebuild"
     done
 
-    do_make $enable
-    do_make $build
+    do_make deps
+
+    if [ -z "${enable}" ]; then
+        do_make build
+    else
+        do_make $enable
+        do_make $build
+    fi
 }
 
 do_install() {
@@ -102,8 +108,14 @@ do_install() {
         install="${install} ${t}-reinstall"
     done
 
-    do_make $enable
-    do_make $install
+    do_make deps
+
+    if [ -z "${enable}" ]; then
+        do_make install
+    else
+        do_make $enable
+        do_make $install
+    fi
 }
 
 do_uninstall() {
@@ -113,7 +125,11 @@ do_uninstall() {
         uninstall="${uninstall} ${t}-uninstall"
     done
 
-    do_make $uninstall
+    if [ -z "${uninstall}" ]; then
+        do_make uninstall
+    else
+        do_make $uninstall
+    fi
 }
 
 do_remove() {
