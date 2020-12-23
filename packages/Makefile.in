@@ -11,7 +11,6 @@ include packages/pkg-luarocks.mk
 include packages/pkg-python.mk
 include packages/pkg-meson.mk
 include packages/pkg-perl.mk
-include packages/pkg-golang.mk
 include packages/pkg-virtual.mk
 
 PARALLEL_JOBS = 4
