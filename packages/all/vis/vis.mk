@@ -9,6 +9,12 @@ VIS_SITE = $(call github,martanne,vis,$(VIS_VERSION))
 VIS_DEPENDENCIES = ncurses lua lpeg libtermkey
 VIS_CONF_OPTS = --enable-curses --enable-lua
 
+ifeq ($(PACKAGE_ACL),y)
+VIS_CONF_OPTS += --enable-acl
+else
+VIS_CONF_OPTS += --disable-acl
+endif
+
 define VIS_CONFIGURE_CMDS
 	(cd $(@D); $(BUILD_MAKE_ENV) $(BUILD_OPTS) ./configure --prefix=$(INSTALL_DIR)/usr $(VIS_CONF_OPTS))
 endef
