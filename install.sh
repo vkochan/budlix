@@ -5,7 +5,7 @@ mkdir -p ${BUDLIX_DIR}
 mkdir -p ${BUDLIX_DIR}/profile/default
 ln -sf default ${BUDLIX_DIR}/profile/current
 
-rsync -avz -delete Makefile *.mk COPYING README support packages ${BUDLIX_DIR}/main
+rsync -avz -delete Makefile *.mk COPYING support packages ${BUDLIX_DIR}/main
 sudo install -m 755 -D blx /usr/bin/blx
 
 # for u in $(cat /etc/passwd | awk -F':' '{ print $1 }');
