@@ -220,7 +220,7 @@ elif [ ${DO_EXEC} == y ]; then
         exit 1
     fi
 elif [ ${DO_SELECT_PROFILE} == y ]; then
-    ln -sf ${PROFILE} ${BUDLIX_DIR}/profile/current
+    ln -nsf ${BUDLIX_DIR}/profile/${PROFILE} ${BUDLIX_DIR}/profile/current
 else
     usage
     exit 1
