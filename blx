@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 VERSION=0.1
 
@@ -49,7 +49,8 @@ usage() {
     echo "        execute in PROFILE (current or specified via -p)"
     echo ""
     echo "Other options:"
-    echo "    -o,--out PATH   output dir"
+    echo "    -o,--out PATH              output dir"
+    echo "    --<pkgname>-srcdir=PATH    override source dir for the <pkgname>"
 }
 
 error() {
@@ -182,6 +183,14 @@ while [ $# -gt 0 ]; do
                DO_EXEC="y"
 	       ;;
 
+            --*-srcdir=*)
+               pkgname="${1//-srcdir=*/}"
+	       pkgname="${pkgname//--/}"
+	       pkgname_upper="${pkgname//-/_}"
+	       pkgname_upper="${pkgname^^}"
+	       srcdir="${1//--$pkgname-srcdir=}"
+	       eval "export ${pkgname_upper}_OVERRIDE_SRCDIR=\"$srcdir\""
+               ;;
 	    -h)
 		usage
 		exit
