@@ -11,9 +11,11 @@ DO_CONFIGURE=n
 DO_SELECT_PROFILE=y
 DO_EXEC=n
 
-BUDLIX_DIR=${HOME}/.budlix
+PROFILE_DIR=${HOME}/.budlix
 PROFILE="default"
 TARGET=""
+
+BUDLIX_DIR=/budlix
 
 usage() {
     echo "blx - build-your-nix tool v${VERSION}"
@@ -39,7 +41,7 @@ usage() {
     echo "         select PROFILE (~/.budlix/profile/PROFILE) to"
     echo "         which perform the package command:"
     echo ""
-    echo "         1) point ${BUDLIX_DIR}/profile/current to ${BUDLIX_DIR}/profile/dev"
+    echo "         1) point ${PROFILE_DIR}/profile/current to ${PROFILE_DIR}/profile/dev"
     echo "             $ blx -p dev"
     echo ""
     echo "         2) only install package in selected profile (w/o changin current profile):"
@@ -61,8 +63,8 @@ error() {
 do_exec() {
     local sysroot=${OUTPUT_DIR}/sysroot
 
-    make -C ${OUTPUT_DIR} dash-enable
-    make -C ${OUTPUT_DIR} dash-install
+    do_make dash-enable
+    do_make dash-install
 
     export SYSROOT=${sysroot}
 
@@ -78,7 +80,7 @@ do_exec() {
 }
 
 do_make() {
-    make -C ${PWD} O=${OUTPUT_DIR} $@
+    make -C ${BUDLIX_DIR} O=${OUTPUT_DIR} $@
 }
 
 do_build() {
@@ -203,7 +205,7 @@ shift
 done
 
 if [ -z "${OUTPUT_DIR}" ]; then
-    OUTPUT_DIR=${BUDLIX_DIR}/profile/${PROFILE}
+    OUTPUT_DIR=${PROFILE_DIR}/profile/${PROFILE}
 fi
 
 mkdir -p ${OUTPUT_DIR}
@@ -229,7 +231,7 @@ elif [ ${DO_EXEC} == y ]; then
         exit 1
     fi
 elif [ ${DO_SELECT_PROFILE} == y ]; then
-    ln -nsf ${BUDLIX_DIR}/profile/${PROFILE} ${BUDLIX_DIR}/profile/current
+    ln -nsf ${PROFILE_DIR}/profile/${PROFILE} ${PROFILE_DIR}/profile/current
 else
     usage
     exit 1

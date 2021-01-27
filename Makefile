@@ -82,7 +82,7 @@ $(error You have make '$(RUNNING_MAKE_VERSION)' installed. GNU make >= $(MIN_MAK
 endif
 
 # absolute path
-TOPDIR := $(CURDIR)
+TOPDIR := /budlix
 DL_DIR := $(TOPDIR)/dl
 BASE_DIR := $(CANONICAL_O)
 $(if $(BASE_DIR),, $(error output directory "$(O)" does not exist))
