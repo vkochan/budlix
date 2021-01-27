@@ -193,6 +193,12 @@ while [ $# -gt 0 ]; do
 	       srcdir="${1//--$pkgname-srcdir=}"
 	       eval "export ${pkgname_upper}_OVERRIDE_SRCDIR=\"$srcdir\""
                ;;
+
+             --sys)
+               PROFILE_DIR="/budlix"
+               PROFILE="system"
+               ;;
+
 	    -h)
 		usage
 		exit
