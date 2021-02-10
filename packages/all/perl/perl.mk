@@ -47,7 +47,7 @@ define PERL_BUILD_CMDS
 endef
 
 define PERL_INSTALL_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) -C $(@D) install.perl install.sym
+	$(BUILD_MAKE_ENV) $(MAKE) DESTDIR="$(INSTALL_DIR)" -C $(@D) install.perl install.sym
 endef
 
 $(eval $(generic-package))
