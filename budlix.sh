@@ -31,8 +31,8 @@ BLX_SYS_MANPATH="${BLX_SYS_ROOT}/usr/share/man:${BLX_SYS_MANPATH}"
 BLX_SYS_TERMINFO="${BLX_SYS_ROOT}/usr/share/terminfo"
 
 export PATH=${BLX_USER_PATH}:${BLX_SYS_PATH}:${PATH}
-export MANPATH=${BLX_USER_MANPATH}:${BLX_SYS_MANPATH}
-export TERMINFO=${BLX_USER_TERMINFO}:${BLX_SYS_TERMINFO}
+export MANPATH=${BLX_USER_MANPATH}:${BLX_SYS_MANPATH}:/usr/man:/usr/share/man
+export TERMINFO_DIRS=${BLX_USER_TERMINFO}:${BLX_SYS_TERMINFO}:/usr/share/terminfo
 
 if [ -d ${BLX_SYS_PROFILE}/sysroot/etc/budlix/env ]; then
     for e in ${BLX_SYS_PROFILE}/sysroot/etc/budlix/env/*; do
