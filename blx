@@ -210,8 +210,14 @@ while [ $# -gt 0 ]; do
 shift
 done
 
+mkdir -p ${PROFILE_DIR}/profile/${PROFILE}
+
+if [ ! -h ${PROFILE_DIR}/profile/current ] || [ ${DO_SELECT_PROFILE} == y ]; then
+    ln -nsf ${PROFILE_DIR}/profile/${PROFILE} ${PROFILE_DIR}/profile/current
+fi
+
 if [ -z "${OUTPUT_DIR}" ]; then
-    OUTPUT_DIR=${PROFILE_DIR}/profile/${PROFILE}
+    OUTPUT_DIR=${PROFILE_DIR}/profile/current
 fi
 
 mkdir -p ${OUTPUT_DIR}
@@ -236,9 +242,4 @@ elif [ ${DO_EXEC} == y ]; then
     if do_exec; then
         exit 1
     fi
-elif [ ${DO_SELECT_PROFILE} == y ]; then
-    ln -nsf ${PROFILE_DIR}/profile/${PROFILE} ${PROFILE_DIR}/profile/current
-else
-    usage
-    exit 1
 fi
