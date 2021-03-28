@@ -8,11 +8,10 @@ DO_UNINSTALL=n
 DO_REMOVE=n
 DO_PATCH=n
 DO_CONFIGURE=n
-DO_SELECT_PROFILE=y
 DO_EXEC=n
+DO_SWITCH=n
 
 PROFILE_DIR=${HOME}/.budlix
-PROFILE="default"
 TARGET=""
 
 BUDLIX_DIR=/budlix
@@ -47,6 +46,9 @@ usage() {
     echo "         2) only install package in selected profile (w/o changin current profile):"
     echo "             $ blx -p dev -i musl"
     echo ""
+    echo "    -s,--switch"
+    echo "        switch current profile to specified by '-p,--profile'."
+    echo ""
     echo "    -x,--exec"
     echo "        execute in PROFILE (current or specified via -p)"
     echo ""
@@ -77,6 +79,14 @@ do_exec() {
     TERMINFO=${sysroot}/usr/share/terminfo \
     SHELL=${sysroot}/usr/bin/sh \
     ${sysroot}/usr/bin/sh
+}
+
+do_switch() {
+    if [ -z "${PROFILE}" ]; then
+        error "Please specify profile name (-p) to switch"
+    fi
+
+    ln -nsf ${PROFILE_DIR}/profile/${PROFILE} ${PROFILE_DIR}/profile/current
 }
 
 do_make() {
@@ -176,13 +186,16 @@ while [ $# -gt 0 ]; do
 	       ;;
 
 	    -p|--profile)
-               DO_SELECT_PROFILE="y"
 	       PROFILE=$2
 	       shift
 	       ;;
 
 	    -x|--exec)
                DO_EXEC="y"
+	       ;;
+
+	    -s|--switch)
+               DO_SWITCH="y"
 	       ;;
 
             --*-srcdir=*)
@@ -212,12 +225,16 @@ done
 
 mkdir -p ${PROFILE_DIR}/profile/${PROFILE}
 
-if [ ! -h ${PROFILE_DIR}/profile/current ] || [ ${DO_SELECT_PROFILE} == y ]; then
-    ln -nsf ${PROFILE_DIR}/profile/${PROFILE} ${PROFILE_DIR}/profile/current
+if [ ! -h ${PROFILE_DIR}/profile/current ]; then
+    mkdir -p ${PROFILE_DIR}/profile/default
+    ln -nsf ${PROFILE_DIR}/profile/default ${PROFILE_DIR}/profile/current
 fi
 
-if [ -z "${OUTPUT_DIR}" ]; then
-    OUTPUT_DIR=${PROFILE_DIR}/profile/current
+if [ -z "${OUTPUT_DIR}" ] && [ -z "${PROFILE}" ]; then
+    OUTPUT_DIR=$(readlink -f ${PROFILE_DIR}/profile/current)
+fi
+if [ -n "${PROFILE}" ]; then
+    OUTPUT_DIR=${PROFILE_DIR}/profile/${PROFILE}
 fi
 
 mkdir -p ${OUTPUT_DIR}
@@ -240,6 +257,10 @@ elif [ ${DO_REMOVE} == y ]; then
     fi
 elif [ ${DO_EXEC} == y ]; then
     if do_exec; then
+        exit 1
+    fi
+elif [ ${DO_SWITCH} == y ]; then
+    if do_switch; then
         exit 1
     fi
 fi
