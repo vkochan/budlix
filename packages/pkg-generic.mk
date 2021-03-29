@@ -118,7 +118,7 @@ endif
 ################################################################################
 
 # Retrieve the archive
-$(PER_PACKAGE_DIR)/%/build/.stamp_downloaded:
+$(PER_PACKAGE_DIR)/%/.stamp_downloaded:
 	@$(call step_start,download)
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 # Only show the download message if it isn't already downloaded
@@ -135,7 +135,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_downloaded:
 	$(Q)touch $@
 
 # Retrieve actual source archive, e.g. for prebuilt external toolchains
-$(PER_PACKAGE_DIR)/%/build/.stamp_actual_downloaded:
+$(PER_PACKAGE_DIR)/%/.stamp_actual_downloaded:
 	@$(call step_start,actual-download)
 	$(call DOWNLOAD,$($(PKG)_ACTUAL_SOURCE_SITE)/$($(PKG)_ACTUAL_SOURCE_TARBALL),$(PKG))
 	$(Q)mkdir -p $(BUILD_DIR)
@@ -143,7 +143,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_actual_downloaded:
 	$(Q)touch $@
 
 # Unpack the archive
-$(PER_PACKAGE_DIR)/%/build/.stamp_extracted:
+$(PER_PACKAGE_DIR)/%/.stamp_extracted:
 	@$(call step_start,extract)
 	@$(call MESSAGE,"Extracting")
 	$(foreach hook,$($(PKG)_PRE_EXTRACT_HOOKS),$(call $(hook))$(sep))
@@ -157,7 +157,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_extracted:
 
 # Rsync the source directory if the <pkg>_OVERRIDE_SRCDIR feature is
 # used.
-$(PER_PACKAGE_DIR)/%/build/.stamp_rsynced:
+$(PER_PACKAGE_DIR)/%/.stamp_rsynced:
 	@$(call step_start,rsync)
 	@$(call MESSAGE,"Syncing from source dir $(SRCDIR)")
 	@mkdir -p $(BUILD_DIR)
@@ -175,8 +175,8 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_rsynced:
 # prefix of the patches
 #
 # For BR2_GLOBAL_PATCH_DIR, only generate if it is defined
-$(PER_PACKAGE_DIR)/%/build/.stamp_patched: PATCH_BASE_DIRS =  $(PKGDIR)
-$(PER_PACKAGE_DIR)/%/build/.stamp_patched:
+$(PER_PACKAGE_DIR)/%/.stamp_patched: PATCH_BASE_DIRS =  $(PKGDIR)
+$(PER_PACKAGE_DIR)/%/.stamp_patched:
 	@$(call step_start,patch)
 	@$(call MESSAGE,"Patching")
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
@@ -197,7 +197,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_patched:
 	$(Q)touch $@
 
 # Configure
-$(PER_PACKAGE_DIR)/%/build/.stamp_configured:
+$(PER_PACKAGE_DIR)/%/.stamp_configured:
 	@mkdir -p $(STAGING_DIR)
 	@$(call step_start,configure)
 	@$(call MESSAGE,"Configuring")
@@ -208,7 +208,8 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_configured:
 	$(Q)touch $@
 
 # Build
-$(PER_PACKAGE_DIR)/%/build/.stamp_built::
+$(PER_PACKAGE_DIR)/%/.stamp_built::
+	@mkdir -p $($(PKG)_BUILD_DIR)
 	@$(call step_start,build)
 	@$(call MESSAGE,"Building")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
@@ -218,7 +219,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_built::
 	$(Q)touch $@
 
 # Install to install dir
-$(PER_PACKAGE_DIR)/%/build/.stamp_installed:
+$(PER_PACKAGE_DIR)/%/.stamp_installed:
 	@mkdir -p $(INSTALL_DIR)/usr/lib
 	@$(call step_start,install-target)
 	@$(call MESSAGE,"Installing")
@@ -237,7 +238,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_installed:
 	$(Q)touch $@
 
 # Remove package sources
-$(PER_PACKAGE_DIR)/%/build/.stamp_dircleaned:
+$(PER_PACKAGE_DIR)/%/.stamp_dircleaned:
 	rm -Rf $(PER_PACKAGE_DIR)/$(NAME)
 	rm -Rf $(BUILD_DIR)
 
@@ -328,7 +329,8 @@ $(2)_BASENAME	= $$(if $$($(2)_VERSION),$(1)-$$($(2)_VERSION),$(1))
 $(2)_BASENAME_RAW = $$(if $$($(2)_VERSION),$$($(2)_RAWNAME)-$$($(2)_VERSION),$$($(2)_RAWNAME))
 $(2)_DL_SUBDIR ?= $$($(2)_RAWNAME)
 $(2)_DL_DIR = $$(DL_DIR)/$$($(2)_DL_SUBDIR)
-$(2)_DIR	=  $$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)/build
+$(2)_DIR	=  $$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)
+$(2)_BUILD_DIR	=  $$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)/build
 $(2)_INSTALL_DIR =  $$(PER_PACKAGE_DIR)/$$($(2)_BASENAME)/install
 
 ifndef $(2)_SUBDIR
@@ -347,7 +349,7 @@ ifndef $(2)_STRIP_COMPONENTS
  endif
 endif
 
-$(2)_SRCDIR		       = $$($(2)_DIR)/$$($(2)_SUBDIR)
+$(2)_SRCDIR		       = $$($(2)_BUILD_DIR)/$$($(2)_SUBDIR)
 $(2)_BUILDDIR		       ?= $$($(2)_SRCDIR)
 
 ifneq ($$($(2)_OVERRIDE_SRCDIR),)
@@ -498,7 +500,7 @@ $(2)_TARGET_DIRCLEAN =		$$($(2)_DIR)/.stamp_dircleaned
 $(2)_EXTRACT_CMDS ?= \
 	$$(if $$($(2)_SOURCE),$$(INFLATE$$(suffix $$($(2)_SOURCE))) $$($(2)_DL_DIR)/$$($(2)_SOURCE) | \
 	$$(TAR) --strip-components=$$($(2)_STRIP_COMPONENTS) \
-		-C $$($(2)_DIR) \
+		-C $$($(2)_BUILD_DIR) \
 		$$(foreach x,$$($(2)_EXCLUDES),--exclude='$$(x)' ) \
 		$$(TAR_OPTIONS) -)
 
@@ -738,7 +740,7 @@ ifneq ($$(call qstrip,$$($(2)_SOURCE)),)
 ifeq ($$(call qstrip,$$($(2)_LICENSE_FILES)),)
 	$(Q)$$(call legal-warning-pkg,$$($(2)_BASENAME_RAW),cannot save license ($(2)_LICENSE_FILES not defined))
 else
-	$(Q)$$(foreach F,$$($(2)_LICENSE_FILES),$$(call legal-license-file,$$($(2)_RAWNAME),$$($(2)_BASENAME_RAW),$$($(2)_HASH_FILE),$$(F),$$($(2)_DIR)/$$(F),$$(call UPPERCASE,$(4)))$$(sep))
+	$(Q)$$(foreach F,$$($(2)_LICENSE_FILES),$$(call legal-license-file,$$($(2)_RAWNAME),$$($(2)_BASENAME_RAW),$$($(2)_HASH_FILE),$$(F),$$($(2)_BUILD_DIR)/$$(F),$$(call UPPERCASE,$(4)))$$(sep))
 endif # license files
 
 ifeq ($$($(2)_SITE_METHOD),local)
