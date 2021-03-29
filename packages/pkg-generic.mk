@@ -236,6 +236,7 @@ $(PER_PACKAGE_DIR)/%/.stamp_installed:
 	$(call per-package-rsync,$(PKG),install,$(SYSROOT_DIR))
 	@$(call step_end,install-target)
 	$(Q)touch $@
+	$(Q)rm -rf $(BUILD_DIR)
 
 # Remove package sources
 $(PER_PACKAGE_DIR)/%/.stamp_dircleaned:
