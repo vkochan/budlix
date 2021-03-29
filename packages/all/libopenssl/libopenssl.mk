@@ -28,7 +28,7 @@ LIBOPENSSL_CFLAGS += -DOPENSSL_NO_ASYNC
 endif
 
 define LIBOPENSSL_CONFIGURE_CMDS
-	(cd $(@D); \
+	(cd $(BUILD_DIR); \
 		$(BUILD_OPTS) \
 		./Configure \
 		$(LIBOPENSSL_BUILD_ARCH) \
@@ -43,16 +43,16 @@ define LIBOPENSSL_CONFIGURE_CMDS
 		shared \
 		zlib-dynamic \
 	)
-	$(SED) "s#-O[0-9s]#$(LIBOPENSSL_CFLAGS)#" $(@D)/Makefile
-	$(SED) "s# build_tests##" $(@D)/Makefile
+	$(SED) "s#-O[0-9s]#$(LIBOPENSSL_CFLAGS)#" $(BUILD_DIR)/Makefile
+	$(SED) "s# build_tests##" $(BUILD_DIR)/Makefile
 endef
 
 define LIBOPENSSL_BUILD_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) -C $(@D)
+	$(BUILD_MAKE_ENV) $(MAKE) -C $(BUILD_DIR)
 endef
 
 define LIBOPENSSL_INSTALL_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) -C $(@D) install
+	$(BUILD_MAKE_ENV) $(MAKE) -C $(BUILD_DIR) install
 endef
 
 $(eval $(generic-package))

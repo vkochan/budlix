@@ -29,12 +29,12 @@ BUSYBOX_MAKE_OPTS = \
 	CONFIG_PREFIX="$(INSTALL_DIR)"
 
 define BUSYBOX_BUILD_CMDS
-	cp $(BUSYBOX_PKGDIR)/config $(@D)/.config
-	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
+	cp $(BUSYBOX_PKGDIR)/config $(BUILD_DIR)/.config
+	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(BUILD_DIR) install
 endef
 
 define BUSYBOX_INSTALL_CMDS
-	cd $(@D); ./applets/install.sh $(INSTALL_DIR) --symlinks --noclobber
+	cd $(BUILD_DIR); ./applets/install.sh $(INSTALL_DIR) --symlinks --noclobber
 endef
 
 $(eval $(generic-package))

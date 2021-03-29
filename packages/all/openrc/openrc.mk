@@ -25,11 +25,11 @@ OPENRC_MAKE_OPTS = \
 	CC=$(BUILD_CC)
 
 define OPENRC_BUILD_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) $(OPENRC_MAKE_OPTS) -C $(@D)
+	$(BUILD_MAKE_ENV) $(MAKE) $(OPENRC_MAKE_OPTS) -C $(BUILD_DIR)
 endef
 
 define OPENRC_INSTALL_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) $(OPENRC_MAKE_OPTS) -C $(@D) install
+	$(BUILD_MAKE_ENV) $(MAKE) $(OPENRC_MAKE_OPTS) -C $(BUILD_DIR) install
 	$(INSTALL) -D -m 0755 $(OPENRC_PKGDIR)/sysv-rcs \
 		$(INSTALL_DIR)/etc/init.d/sysv-rcs
 endef

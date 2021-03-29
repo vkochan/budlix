@@ -14,11 +14,11 @@ FZY_BUILD_OPTS = \
 	PREFIX=$(INSTALL_DIR)/usr
 
 define FZY_BUILD_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) $(FZY_BUILD_OPTS) -C $(@D)
+	$(BUILD_MAKE_ENV) $(MAKE) $(FZY_BUILD_OPTS) -C $(BUILD_DIR)
 endef
 
 define FZY_INSTALL_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) $(FZY_BUILD_OPTS) -C $(@D) install
+	$(BUILD_MAKE_ENV) $(MAKE) $(FZY_BUILD_OPTS) -C $(BUILD_DIR) install
 endef
 
 $(eval $(generic-package))

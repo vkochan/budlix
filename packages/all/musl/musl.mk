@@ -25,7 +25,7 @@ MUSL_BUILD_OPTS = \
 	STAGING_DIR="$(STAGING_DIR)"
 
 define MUSL_CONFIGURE_CMDS
-	(cd $(@D); \
+	(cd $(BUILD_DIR); \
 		$(MUSL_BUILD_OPTS) \
 		CFLAGS="$(filter-out -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64,$(BUILD_CFLAGS)) $(MUSL_EXTRA_CFLAGS)" \
 		CPPFLAGS="$(filter-out -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64,$(BUILD_CPPFLAGS))" \
@@ -37,11 +37,11 @@ define MUSL_CONFIGURE_CMDS
 endef
 
 define MUSL_BUILD_CMDS
-	$(MUSL_BUILD_OPTS) $(MAKE) -C $(@D)
+	$(MUSL_BUILD_OPTS) $(MAKE) -C $(BUILD_DIR)
 endef
 
 define MUSL_INSTALL_CMDS
-	$(MAKE) -C $(@D) DESTDIR=$(INSTALL_DIR) install
+	$(MAKE) -C $(BUILD_DIR) DESTDIR=$(INSTALL_DIR) install
 
 	$(SED) -e 's|/usr/include|$(INSTALL_DIR)/usr/include|g' -e 's|/lib|$(INSTALL_DIR)/lib|g' \
                $(INSTALL_DIR)/lib/musl-gcc.specs

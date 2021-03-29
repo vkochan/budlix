@@ -10,20 +10,20 @@ NET_TOOLS_LICENSE = GPL-2.0+
 NET_TOOLS_LICENSE_FILES = COPYING
 
 define NET_TOOLS_CONFIGURE_CMDS
-	(cd $(@D); yes "" | ./configure.sh config.in )
+	(cd $(BUILD_DIR); yes "" | ./configure.sh config.in )
 endef
 
 define NET_TOOLS_BUILD_CMDS
 	$(BUILD_OPTS) \
 		LDFLAGS="$(BUILD_LDFLAGS)" \
-		$(MAKE) -C $(@D)
+		$(MAKE) -C $(BUILD_DIR)
 endef
 
 # install renames conflicting binaries, update does not
 # ifconfig & route reside in /sbin for busybox, so ensure we don't end
 # up with two versions of those.
 define NET_TOOLS_INSTALL_TARGET_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(INSTALL_DIR) update
+	$(BUILD_MAKE_ENV) $(MAKE) -C $(BUILD_DIR) DESTDIR=$(INSTALL_DIR) update
 	mv -f $(INSTALL_DIR)/bin/ifconfig $(INSTALL_DIR)/sbin/ifconfig
 	mv -f $(INSTALL_DIR)/bin/route $(INSTALL_DIR)/sbin/route
 endef

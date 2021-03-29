@@ -51,7 +51,7 @@ AUTOCONF_AC_CHECK_FILE_VAL = ac_cv_file_$(subst -,_,$(subst /,_,$(subst .,_,$(1)
 #
 define UPDATE_CONFIG_HOOK
 	@$(call MESSAGE,"Updating config.sub and config.guess")
-	$(call CONFIG_UPDATE,$(@D))
+	$(call CONFIG_UPDATE,$(BUILD_DIR))
 endef
 
 #

@@ -54,9 +54,9 @@ NCURSES_POST_INSTALL_HOOKS += NCURSES_LINK_INSTALLED_LIBS
 # ncurses breaks with parallel build, but takes quite a while to
 # build single threaded. Work around it similar to how Gentoo does
 define NCURSES_BUILD_CMDS
-	$(BUILD_OPTS) $(MAKE1) -C $(@D) DESTDIR=$(INSTALL_DIR) sources
-	rm -rf $(@D)/misc/pc-files
-	$(BUILD_OPTS) $(MAKE) -C $(@D) DESTDIR=$(INSTALL_DIR)
+	$(BUILD_OPTS) $(MAKE1) -C $(BUILD_DIR) DESTDIR=$(INSTALL_DIR) sources
+	rm -rf $(BUILD_DIR)/misc/pc-files
+	$(BUILD_OPTS) $(MAKE) -C $(BUILD_DIR) DESTDIR=$(INSTALL_DIR)
 endef
 
 $(eval $(autotools-package))

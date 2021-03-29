@@ -15,11 +15,11 @@ IW_MAKE_ENV = \
 	PKG_CONFIG="$(STAGING_DIR)/usr/bin/pkg-config"
 
 define IW_BUILD_CMDS
-	$(IW_MAKE_ENV) $(BUILD_OPTS) $(MAKE) -C $(@D)
+	$(IW_MAKE_ENV) $(BUILD_OPTS) $(MAKE) -C $(BUILD_DIR)
 endef
 
 define IW_INSTALL_CMDS
-	$(IW_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(INSTALL_DIR) install
+	$(IW_MAKE_ENV) $(MAKE) -C $(BUILD_DIR) DESTDIR=$(INSTALL_DIR) install
 endef
 
 $(eval $(generic-package))

@@ -15,11 +15,11 @@ LSHW_MAKE_OPTS = CC="$(BUILD_CC)" CXX="$(BUILD_CXX)" AR="$(BUILD_AR)" \
 LSHW_MAKE_ENV = $(BUILD_MAKE_ENV)
 
 define LSHW_BUILD_CMDS
-	$(LSHW_MAKE_ENV) $(MAKE) -C $(@D)/src $(LSHW_MAKE_OPTS) all
+	$(LSHW_MAKE_ENV) $(MAKE) -C $(BUILD_DIR)/src $(LSHW_MAKE_OPTS) all
 endef
 
 define LSHW_INSTALL_CMDS
-	$(LSHW_MAKE_ENV) $(MAKE) -C $(@D)/src $(LSHW_MAKE_OPTS) install
+	$(LSHW_MAKE_ENV) $(MAKE) -C $(BUILD_DIR)/src $(LSHW_MAKE_OPTS) install
 endef
 
 $(eval $(generic-package))

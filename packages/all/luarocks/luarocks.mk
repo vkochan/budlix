@@ -21,12 +21,12 @@ LUAROCKS_CONF_OPTS = \
 	--with-lua=$(STAGING_DIR)/usr
 
 define LUAROCKS_CONFIGURE_CMDS
-	cd $(@D) && ./configure $(LUAROCKS_CONF_OPTS)
+	cd $(BUILD_DIR) && ./configure $(LUAROCKS_CONF_OPTS)
 endef
 
 define LUAROCKS_INSTALL_CMDS
 	rm -f $(LUAROCKS_CONFIG_FILE_DEFAULT)
-	$(MAKE) -C $(@D) install
+	$(MAKE) -C $(BUILD_DIR) install
 	cat $(LUAROCKS_CONFIG_FILE_DEFAULT) $(LUAROCKS_PKGDIR)/luarocks-config.lua \
 		> $(INSTALL_DIR)/etc/luarocks/config.lua
 	rm -f $(LUAROCKS_CONFIG_FILE_DEFAULT)

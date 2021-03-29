@@ -10,11 +10,11 @@ LIBTERMKEY_SITE = http://www.leonerd.org.uk/code/libtermkey
 LIBTERMKEY_DEPENDENCIES = ncurses libtool pkgconf
 
 define LIBTERMKEY_BUILD_CMDS
-	$(BUILD_OPTS) $(MAKE) PREFIX=$(INSTALL_DIR)/usr -C $(@D)
+	$(BUILD_OPTS) $(MAKE) PREFIX=$(INSTALL_DIR)/usr -C $(BUILD_DIR)
 endef
 
 define LIBTERMKEY_INSTALL_CMDS
-	$(BUILD_OPTS) $(MAKE) PREFIX=$(INSTALL_DIR)/usr -C $(@D) install
+	$(BUILD_OPTS) $(MAKE) PREFIX=$(INSTALL_DIR)/usr -C $(BUILD_DIR) install
 endef
 
 $(eval $(generic-package))

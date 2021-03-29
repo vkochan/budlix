@@ -10,20 +10,20 @@ TIG_DEPENDENCIES = readline
 TIG_ENABLE_PACKAGES = git
 
 define TIG_RUN_AUTOGEN
-	cd $(@D) && PATH=$(PATH) ./autogen.sh
+	cd $(BUILD_DIR) && PATH=$(PATH) ./autogen.sh
 endef
 TIG_PRE_CONFIGURE_HOOKS += TIG_RUN_AUTOGEN
 
 define TIG_CONFIGURE_CMDS
-	(cd $(@D); $(BUILD_MAKE_ENV) $(BUILD_OPTS) ./configure --prefix=$(INSTALL_DIR)/usr $(TIG_CONF_OPTS))
+	(cd $(BUILD_DIR); $(BUILD_MAKE_ENV) $(BUILD_OPTS) ./configure --prefix=$(INSTALL_DIR)/usr $(TIG_CONF_OPTS))
 endef
 
 define TIG_BUILD_CMDS
-	$(MAKE) $(BUILD_OPTS) -C $(@D)
+	$(MAKE) $(BUILD_OPTS) -C $(BUILD_DIR)
 endef
 
 define TIG_INSTALL_CMDS
-	$(MAKE) $(BUILD_OPTS) -C $(@D) install
+	$(MAKE) $(BUILD_OPTS) -C $(BUILD_DIR) install
 endef
 
 $(eval $(generic-package))

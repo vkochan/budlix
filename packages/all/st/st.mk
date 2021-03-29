@@ -13,11 +13,11 @@ ST_OPTS = PREFIX=$(INSTALL_DIR)/usr \
 	  X11LIB=$(STAGING_DIR)/usr/lib
 
 define ST_BUILD_CMDS
-	$(MAKE) $(BUILD_OPTS) $(ST_OPTS) -C $(@D)
+	$(MAKE) $(BUILD_OPTS) $(ST_OPTS) -C $(BUILD_DIR)
 endef
 
 define ST_INSTALL_CMDS
-	$(MAKE) $(BUILD_OPTS) $(ST_OPTS) -C $(@D) install
+	$(MAKE) $(BUILD_OPTS) $(ST_OPTS) -C $(BUILD_DIR) install
 endef
 
 $(eval $(generic-package))

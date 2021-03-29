@@ -25,7 +25,7 @@ PERL_EXTRA_DOWNLOADS = $(PERL_CROSS_SITE)/$(PERL_CROSS_SOURCE)
 # together with perl
 define PERL_CROSS_EXTRACT
 	$(call suitable-extractor,$(PERL_CROSS_SOURCE)) $(PERL_DL_DIR)/$(PERL_CROSS_SOURCE) | \
-	$(TAR) --strip-components=1 -C $(@D) $(TAR_OPTIONS) -
+	$(TAR) --strip-components=1 -C $(BUILD_DIR) $(TAR_OPTIONS) -
 endef
 PERL_POST_EXTRACT_HOOKS += PERL_CROSS_EXTRACT
 
@@ -39,18 +39,18 @@ PERL_CONF_OPTS = \
 	-Dinc_version_list=none
 
 define PERL_CONFIGURE_CMDS
-	(cd $(@D); $(BUILD_MAKE_ENV) ./configure $(PERL_CONF_OPTS))
+	(cd $(BUILD_DIR); $(BUILD_MAKE_ENV) ./configure $(PERL_CONF_OPTS))
 endef
 
 define PERL_BUILD_CMDS
-	$(BUILD_MAKE_ENV) $(MAKE) -C $(@D) all
+	$(BUILD_MAKE_ENV) $(MAKE) -C $(BUILD_DIR) all
 endef
 
 define PERL_INSTALL_CMDS
 	mkdir -p $(INSTALL_DIR)/etc/budlix/env
 	echo "export PERL5LIB=$(INSTALL_DIR)/usr/lib/perl5/$(PERL_VERSION)" > $(INSTALL_DIR)/etc/budlix/env/perl
 
-	$(BUILD_MAKE_ENV) $(MAKE) DESTDIR="$(INSTALL_DIR)" -C $(@D) install.perl install.sym
+	$(BUILD_MAKE_ENV) $(MAKE) DESTDIR="$(INSTALL_DIR)" -C $(BUILD_DIR) install.perl install.sym
 endef
 
 $(eval $(generic-package))

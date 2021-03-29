@@ -12,7 +12,7 @@ DASH_DEPENDENCIES += libedit
 DASH_CONF_OPTS += --with-libedit
 
 define DASH_INSTALL_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/src/dash $(INSTALL_DIR)/usr/bin/dash
+	$(INSTALL) -m 0755 -D $(BUILD_DIR)/src/dash $(INSTALL_DIR)/usr/bin/dash
 	ln -sf dash $(INSTALL_DIR)/usr/bin/sh
 endef
 

@@ -130,7 +130,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_downloaded:
 	done
 	$(foreach p,$($(PKG)_ALL_DOWNLOADS),$(call DOWNLOAD,$(p),$(PKG))$(sep))
 	$(foreach hook,$($(PKG)_POST_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
-	$(Q)mkdir -p $(@D)
+	$(Q)mkdir -p $(BUILD_DIR)
 	@$(call step_end,download)
 	$(Q)touch $@
 
@@ -138,7 +138,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_downloaded:
 $(PER_PACKAGE_DIR)/%/build/.stamp_actual_downloaded:
 	@$(call step_start,actual-download)
 	$(call DOWNLOAD,$($(PKG)_ACTUAL_SOURCE_SITE)/$($(PKG)_ACTUAL_SOURCE_TARBALL),$(PKG))
-	$(Q)mkdir -p $(@D)
+	$(Q)mkdir -p $(BUILD_DIR)
 	@$(call step_end,actual-download)
 	$(Q)touch $@
 
@@ -147,10 +147,10 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_extracted:
 	@$(call step_start,extract)
 	@$(call MESSAGE,"Extracting")
 	$(foreach hook,$($(PKG)_PRE_EXTRACT_HOOKS),$(call $(hook))$(sep))
-	$(Q)mkdir -p $(@D)
+	$(Q)mkdir -p $(BUILD_DIR)
 	$($(PKG)_EXTRACT_CMDS)
 # some packages have messed up permissions inside
-	$(Q)chmod -R +rw $(@D)
+	$(Q)chmod -R +rw $(BUILD_DIR)
 	$(foreach hook,$($(PKG)_POST_EXTRACT_HOOKS),$(call $(hook))$(sep))
 	@$(call step_end,extract)
 	$(Q)touch $@
@@ -160,10 +160,10 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_extracted:
 $(PER_PACKAGE_DIR)/%/build/.stamp_rsynced:
 	@$(call step_start,rsync)
 	@$(call MESSAGE,"Syncing from source dir $(SRCDIR)")
-	@mkdir -p $(@D)
+	@mkdir -p $(BUILD_DIR)
 	$(foreach hook,$($(PKG)_PRE_RSYNC_HOOKS),$(call $(hook))$(sep))
 	@test -d $(SRCDIR) || (echo "ERROR: $(SRCDIR) does not exist" ; exit 1)
-	rsync -au --chmod=u=rwX,go=rX $($(PKG)_OVERRIDE_SRCDIR_RSYNC_EXCLUSIONS) $(RSYNC_EXCLUSIONS) $(call qstrip,$(SRCDIR))/ $(@D)
+	rsync -au --chmod=u=rwX,go=rX $($(PKG)_OVERRIDE_SRCDIR_RSYNC_EXCLUSIONS) $(RSYNC_EXCLUSIONS) $(call qstrip,$(SRCDIR))/ $(BUILD_DIR)
 	$(foreach hook,$($(PKG)_POST_RSYNC_HOOKS),$(call $(hook))$(sep))
 	@$(call step_end,rsync)
 	$(Q)touch $@
@@ -180,14 +180,14 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_patched:
 	@$(call step_start,patch)
 	@$(call MESSAGE,"Patching")
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
-	$(foreach p,$($(PKG)_PATCH),$(APPLY_PATCHES) $(@D) $($(PKG)_DL_DIR) $(notdir $(p))$(sep))
+	$(foreach p,$($(PKG)_PATCH),$(APPLY_PATCHES) $(BUILD_DIR) $($(PKG)_DL_DIR) $(notdir $(p))$(sep))
 	$(Q)( \
 	for D in $(PATCH_BASE_DIRS); do \
 	  if test -d $${D}; then \
 	    if test -d $${D}/$($(PKG)_VERSION); then \
-	      $(APPLY_PATCHES) $(@D) $${D}/$($(PKG)_VERSION) \*.patch \*.patch.$(ARCH) || exit 1; \
+	      $(APPLY_PATCHES) $(BUILD_DIR) $${D}/$($(PKG)_VERSION) \*.patch \*.patch.$(ARCH) || exit 1; \
 	    else \
-	      $(APPLY_PATCHES) $(@D) $${D} \*.patch \*.patch.$(ARCH) || exit 1; \
+	      $(APPLY_PATCHES) $(BUILD_DIR) $${D} \*.patch \*.patch.$(ARCH) || exit 1; \
 	    fi; \
 	  fi; \
 	done; \
@@ -239,7 +239,7 @@ $(PER_PACKAGE_DIR)/%/build/.stamp_installed:
 # Remove package sources
 $(PER_PACKAGE_DIR)/%/build/.stamp_dircleaned:
 	rm -Rf $(PER_PACKAGE_DIR)/$(NAME)
-	rm -Rf $(@D)
+	rm -Rf $(BUILD_DIR)
 
 define virt-provides-single
 ifneq ($$(call qstrip,$$(PACKAGE_PROVIDES_$(2))),$(3))

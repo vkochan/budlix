@@ -16,14 +16,14 @@ MUSL_COMPAT_HEADERS_ADD_LIBC_DEPENDENCY = NO
 
 # Copying both headers so legal-info finds them (they are _LICENSE_FILES)
 define MUSL_COMPAT_HEADERS_EXTRACT_CMDS
-	$(INSTALL) -m 0644 -D $(MUSL_COMPAT_HEADERS_DL_DIR)/$(notdir $(MUSL_COMPAT_HEADERS_QUEUE_H)) $(@D)/queue.h
-	$(INSTALL) -m 0644 -D $(MUSL_COMPAT_HEADERS_PKGDIR)/cdefs.h $(@D)/cdefs.h
+	$(INSTALL) -m 0644 -D $(MUSL_COMPAT_HEADERS_DL_DIR)/$(notdir $(MUSL_COMPAT_HEADERS_QUEUE_H)) $(BUILD_DIR)/queue.h
+	$(INSTALL) -m 0644 -D $(MUSL_COMPAT_HEADERS_PKGDIR)/cdefs.h $(BUILD_DIR)/cdefs.h
 endef
 
 define MUSL_COMPAT_HEADERS_INSTALL_CMDS
-	$(INSTALL) -D -m 0644 $(@D)/queue.h \
+	$(INSTALL) -D -m 0644 $(BUILD_DIR)/queue.h \
 		$(INSTALL_DIR)/usr/include/sys/queue.h
-	$(INSTALL) -D -m 0644 $(@D)/cdefs.h \
+	$(INSTALL) -D -m 0644 $(BUILD_DIR)/cdefs.h \
 		$(INSTALL_DIR)/usr/include/sys/cdefs.h
 endef
 

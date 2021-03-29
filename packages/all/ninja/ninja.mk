@@ -18,11 +18,11 @@ NINJA_USE_FOR_BUILD = YES
 NINJA_DEPENDENCIES = python3
 
 define NINJA_BUILD_CMDS
-	(cd $(@D); $(STAGING_DIR)/usr/bin/python3 configure.py --bootstrap)
+	(cd $(BUILD_DIR); $(STAGING_DIR)/usr/bin/python3 configure.py --bootstrap)
 endef
 
 define NINJA_INSTALL_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/ninja $(INSTALL_DIR)/usr/bin/ninja
+	$(INSTALL) -m 0755 -D $(BUILD_DIR)/ninja $(INSTALL_DIR)/usr/bin/ninja
 endef
 
 $(eval $(generic-package))

@@ -19,11 +19,11 @@ DWM_OPTS = PREFIX=$(INSTALL_DIR)/usr \
 	   X11LIB=$(STAGING_DIR)/usr/lib
 
 define DWM_BUILD_CMDS
-	$(MAKE) $(DWM_OPTS) -C $(@D)
+	$(MAKE) $(DWM_OPTS) -C $(BUILD_DIR)
 endef
 
 define DWM_INSTALL_CMDS
-	$(MAKE) $(DWM_OPTS) -C $(@D) install
+	$(MAKE) $(DWM_OPTS) -C $(BUILD_DIR) install
 endef
 
 $(eval $(generic-package))

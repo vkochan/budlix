@@ -18,7 +18,7 @@ DB_LICENSE_FILES = LICENSE
 
 # build directory can't be the directory where configure are there, so..
 define DB_CONFIGURE_CMDS
-	(cd $(@D)/build_unix; rm -rf config.cache; \
+	(cd $(BUILD_DIR)/build_unix; rm -rf config.cache; \
 		$(BUILD_OPTS) \
 		$(TARGET_CONFIGURE_ARGS) \
 		../dist/configure $(QUIET) \

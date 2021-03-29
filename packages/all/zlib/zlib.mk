@@ -11,7 +11,7 @@ ZLIB_LICENSE = Zlib
 ZLIB_LICENSE_FILES = README
 
 define ZLIB_CONFIGURE_CMDS
-	(cd $(@D); rm -rf config.cache; \
+	(cd $(BUILD_DIR); rm -rf config.cache; \
 		$(BUILD_OPTS) \
 		CFLAGS="$(BUILD_CFLAGS)" \
 		./configure \
@@ -20,11 +20,11 @@ define ZLIB_CONFIGURE_CMDS
 endef
 
 define ZLIB_BUILD_CMDS
-	$(BUILD_OPTS) $(MAKE1) -C $(@D)
+	$(BUILD_OPTS) $(MAKE1) -C $(BUILD_DIR)
 endef
 
 define ZLIB_INSTALL_CMDS
-	$(MAKE1) -C $(@D) DESTDIR=$(INSTALL_DIR) LDCONFIG=true install
+	$(MAKE1) -C $(BUILD_DIR) DESTDIR=$(INSTALL_DIR) LDCONFIG=true install
 endef
 
 $(eval $(generic-package))

@@ -9,11 +9,11 @@ DVTM_SITE = $(call github,martanne,dvtm,$(DVTM_VERSION))
 DVTM_DEPENDENCIES = ncurses
 
 define DVTM_BUILD_CMDS
-	$(BUILD_OPTS) $(MAKE) -C $(@D)
+	$(BUILD_OPTS) $(MAKE) -C $(BUILD_DIR)
 endef
 
 define DVTM_INSTALL_CMDS
-	$(MAKE) -C $(@D) PREFIX=/usr DESTDIR=$(INSTALL_DIR) install
+	$(MAKE) -C $(BUILD_DIR) PREFIX=/usr DESTDIR=$(INSTALL_DIR) install
 endef
 
 $(eval $(generic-package))

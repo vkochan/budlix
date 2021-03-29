@@ -16,15 +16,15 @@ VIS_CONF_OPTS += --disable-acl
 endif
 
 define VIS_CONFIGURE_CMDS
-	(cd $(@D); $(BUILD_MAKE_ENV) $(BUILD_OPTS) ./configure --prefix=$(INSTALL_DIR)/usr $(VIS_CONF_OPTS))
+	(cd $(BUILD_DIR); $(BUILD_MAKE_ENV) $(BUILD_OPTS) ./configure --prefix=$(INSTALL_DIR)/usr $(VIS_CONF_OPTS))
 endef
 
 define VIS_BUILD_CMDS
-	$(MAKE) $(BUILD_OPTS) -C $(@D)
+	$(MAKE) $(BUILD_OPTS) -C $(BUILD_DIR)
 endef
 
 define VIS_INSTALL_CMDS
-	$(MAKE) $(BUILD_OPTS) -C $(@D) install
+	$(MAKE) $(BUILD_OPTS) -C $(BUILD_DIR) install
 endef
 
 $(eval $(generic-package))
