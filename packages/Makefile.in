@@ -32,7 +32,9 @@ BUILD_MAKE_ENV = \
 	PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 \
 	PKG_CONFIG_ALLOW_SYSTEM_LIBS=1 \
 	PKG_CONFIG_PATH="$(STAGING_DIR)/usr/lib/pkgconfig" \
-	PKG_CONFIG_LIBDIR="$(STAGING_DIR)/usr/lib/pkgconfig:$(STAGING_DIR)/usr/share/pkgconfig"
+	PKG_CONFIG_LIBDIR="$(STAGING_DIR)/usr/lib/pkgconfig:$(STAGING_DIR)/usr/share/pkgconfig" \
+	PERL5LIB="$(STAGING_DIR)/usr/lib/perl5/$(PERL_VERSION)/$(PERL_ARCHNAME):$(STAGING_DIR)/usr/lib/perl5/$(PERL_VERSION)"
+
 
 BUILD_LDFLAGS = -Wl,-rpath,$(STAGING_DIR)/usr/lib/ -L$(STAGING_DIR)/usr/lib
 BUILD_CFLAGS = -I$(STAGING_DIR)/usr/include
