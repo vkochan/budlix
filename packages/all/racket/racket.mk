@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-RACKET_VERSION = 8.0
+RACKET_VERSION = 8.1
 RACKET_SITE = $(call github,racket,racket,v$(RACKET_VERSION))
 RACKET_DEPENDENCIES = libffi
 RACKET_SUBDIR = racket/src
