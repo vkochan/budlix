@@ -14,8 +14,6 @@ RACKET_CONF_OPTS = --prefix=$(INSTALL_DIR)/usr \
 RACKET_BOOT_SOURCE = v$(RACKET_VERSION).tar.gz
 RACKET_EXTRA_DOWNLOADS = https://github.com/racket/pb/archive/refs/heads/$(RACKET_BOOT_SOURCE)
 
-RACKET_ENV_FILE = $(INSTALL_DIR)/etc/budlix/env/racket
-
 define RACKET_EXTRACT_BOOT_SOURCE
 	mkdir -p $(BUILD_DIR)/$(RACKET_SUBDIR)/ChezScheme/boot/pb
 	$(call suitable-extractor,$(RACKET_BOOT_SOURCE)) $(RACKET_DL_DIR)/$(RACKET_BOOT_SOURCE) | \
@@ -32,9 +30,6 @@ define RACKET_BUILD_CMDS
 endef
 
 define RACKET_INSTALL_CMDS
-	mkdir -p $(INSTALL_DIR)/etc/budlix/env
-	rm -f $(RACKET_ENV_FILE)
-
 	$(BUILD_MAKE_ENV) $(MAKE) -C $(BUILD_DIR)/$(RACKET_SUBDIR) install
 endef
 
