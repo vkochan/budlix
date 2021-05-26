@@ -14,6 +14,7 @@ endef
 
 HELP2MAN_POST_INSTALL_HOOKS += HELP2MAN_FIXUP_PERL_PATH
 HELP2MAN_DEPENDENCIES = perl-locale-gettext
+HELP2MAN_USE_FOR_BUILD = YES
 
 $(eval $(autotools-package))
 
