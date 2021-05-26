@@ -23,6 +23,8 @@ ifeq ($(PACKAGE_MUSL),y)
 BUILD_CC += -specs $(STAGING_DIR)/lib/musl-gcc.specs
 endif
 
+PERL5LIB="$(STAGING_DIR)/usr/lib/perl5/$(PERL_VERSION)/$(PERL_ARCHNAME):$(STAGING_DIR)/usr/lib/perl5/$(PERL_VERSION)"
+
 BUILD_MAKE_ENV = \
 	PATH="$(BUILD_PATH):$(PATH)" \
 	HELP2MAN="$(HELP2MAN)" \
@@ -33,7 +35,7 @@ BUILD_MAKE_ENV = \
 	PKG_CONFIG_ALLOW_SYSTEM_LIBS=1 \
 	PKG_CONFIG_PATH="$(STAGING_DIR)/usr/lib/pkgconfig" \
 	PKG_CONFIG_LIBDIR="$(STAGING_DIR)/usr/lib/pkgconfig:$(STAGING_DIR)/usr/share/pkgconfig" \
-	PERL5LIB="$(STAGING_DIR)/usr/lib/perl5/$(PERL_VERSION)/$(PERL_ARCHNAME):$(STAGING_DIR)/usr/lib/perl5/$(PERL_VERSION)"
+	PERL5LIB="$(PERL5LIB)"
 
 
 BUILD_LDFLAGS = -Wl,-rpath,$(STAGING_DIR)/usr/lib/ -L$(STAGING_DIR)/usr/lib
