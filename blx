@@ -70,6 +70,12 @@ do_exec() {
 
     export SYSROOT=${sysroot}
 
+    if [ -d ${OUTPUT_DIR}/sysroot/etc/budlix/env ]; then
+        for e in ${OUTPUT_DIR}/sysroot/etc/budlix/env/*; do
+            source $e
+        done
+    fi
+
     if [ -x ${OUTPUT_DIR}/profile.sh ]; then
         source ${OUTPUT_DIR}/profile.sh
     fi
