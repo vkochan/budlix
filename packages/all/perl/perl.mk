@@ -30,7 +30,7 @@ endef
 PERL_POST_EXTRACT_HOOKS += PERL_CROSS_EXTRACT
 
 PERL_CONF_OPTS = \
-	--prefix="/usr" \
+	--prefix="$(INSTALL_DIR)/usr" \
 	-Dcc="$(BUILD_CC)" \
 	-Dld="$(BUILD_CC)" \
 	-Dccflags="$(BUILD_CFLAGS)" \
@@ -50,7 +50,7 @@ define PERL_INSTALL_CMDS
 	mkdir -p $(INSTALL_DIR)/etc/budlix/env
 	echo "export PERL5LIB=$(INSTALL_DIR)/usr/lib/perl5/$(PERL_VERSION)" > $(INSTALL_DIR)/etc/budlix/env/perl
 
-	$(BUILD_MAKE_ENV) $(MAKE) DESTDIR="$(INSTALL_DIR)" -C $(BUILD_DIR) install.perl install.sym
+	$(BUILD_MAKE_ENV) $(MAKE) -C $(BUILD_DIR) install.perl install.sym
 endef
 
 $(eval $(generic-package))
