@@ -8,8 +8,7 @@ RACKET_VERSION = 8.0
 RACKET_SITE = $(call github,racket,racket,v$(RACKET_VERSION))
 RACKET_DEPENDENCIES = libffi
 RACKET_SUBDIR = racket/src
-RACKET_CONF_OPTS = --prefix=/usr \
-		   --sysconfdir=/etc \
+RACKET_CONF_OPTS = --prefix=$(INSTALL_DIR)/usr \
 		   --enable-csonly
 
 RACKET_BOOT_SOURCE = v$(RACKET_VERSION).tar.gz
@@ -35,13 +34,8 @@ endef
 define RACKET_INSTALL_CMDS
 	mkdir -p $(INSTALL_DIR)/etc/budlix/env
 	rm -f $(RACKET_ENV_FILE)
-	echo "export PLTCONFIGDIR=$(INSTALL_DIR)/etc/racket" >> $(RACKET_ENV_FILE)
-	echo "export PLTCOLLECTS=$(INSTALL_DIR)/usr/share/racket/collects" >> $(RACKET_ENV_FILE)
 
-	$(BUILD_MAKE_ENV) $(MAKE) DESTDIR="$(INSTALL_DIR)" -C $(BUILD_DIR)/$(RACKET_SUBDIR) install
-
-	cp $(RACKET_PKGDIR)/config.rktd $(INSTALL_DIR)/etc/racket
-	$(SED) $(INSTALL_DIR)/etc/racket/config.rktd -e 's|@SYSROOT@|$(SYSROOT_DIR)|g'
+	$(BUILD_MAKE_ENV) $(MAKE) -C $(BUILD_DIR)/$(RACKET_SUBDIR) install
 endef
 
 $(eval $(generic-package))
