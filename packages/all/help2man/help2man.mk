@@ -13,6 +13,7 @@ define HELP2MAN_FIXUP_PERL_PATH
 endef
 
 HELP2MAN_POST_INSTALL_HOOKS += HELP2MAN_FIXUP_PERL_PATH
+HELP2MAN_DEPENDENCIES = perl-locale-gettext
 
 $(eval $(autotools-package))
 
