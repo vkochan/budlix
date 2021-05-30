@@ -83,6 +83,7 @@ do_exec() {
     PATH=${sysroot}/usr/bin:${sysroot}/usr/sbin:${PATH} \
     MANPATH=${sysroot}/usr/man:${sysroot}/usr/share/man \
     TERMINFO=${sysroot}/usr/share/terminfo \
+    C_INCLUDE_PATH=${sysroot}/usr/include \
     SHELL=${sysroot}/usr/bin/sh \
     ${sysroot}/usr/bin/sh
 }
