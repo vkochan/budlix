@@ -9,6 +9,7 @@ TINYCC_SITE = $(call github,TinyCC,tinycc,$(TINYCC_VERSION))
 TINYCC_DEPENDENCIES = texinfo
 TINYCC_CONF_OPTS = --libdir=$(SYSROOT_DIR)/usr/lib \
 		   --includedir=$(SYSROOT_DIR)/usr/include \
-		   --libpaths=$(SYSROOT_DIR)/usr/lib:/usr/lib
-
+		   --libpaths=$(SYSROOT_DIR)/usr/lib:/usr/lib \
+		   --disable-static 
+			
 $(eval $(autotools-package))
